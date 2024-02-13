@@ -1,0 +1,65 @@
+#pragma once
+#include "Point.h"
+#include "board.h"
+
+
+class Shape
+{
+public:
+	enum { SIZE = 4 };
+
+private:
+	enum startVal { X = 6, Y = 2 };
+	Point body[SIZE];
+	Board& myBoard;
+	enum class eDistance { FORx = 1, FORy = 2 };
+	enum class ePlaces { FIRST = 0, SECOND, THIRD, FOURTH };
+	enum class eShapes { squereShape = 1, LRightShape, LLeftShape, TShape, ZLeftfShape, ZRightfShape, columShape };
+	enum class eColors { BLACK, RED, BLUE, GREEN, PURPLE, YELLOW };
+	enum class eDirection { HORIZON = 1, VERTICAL, UPSIDE_DOWN, UPSIDE_LEFT };
+	int direction;
+	void dropShape(); //
+	bool isOnSideLeft();
+	bool isOnSideRight();
+	
+public:
+	int color;
+	int shapeNum;
+	Shape(Board& board) : myBoard(board) {};
+	void getRandShape(bool color);
+	void dupShape(Point from[SIZE], Point to[SIZE]);
+	void drawShape(int playerIndex, char ch = '#');
+	bool move(GameConfig::eKeys key, int playerIndex); //
+	void setShape(int shapeNum, int shapeColor);
+	bool rotateClockwise(int playerIndex); //
+	bool canRotate(); //
+	bool rotateCounterClockwise(int playerIndex); //
+	bool canMoveRight(); //
+	bool canMoveLeft(); //
+	bool reachExistingShape(); //
+	bool inBottom(); 
+	int getLeftmostEdge();
+
+
+
+	int getDirection()
+	{
+		return direction;
+	}
+
+	void setDirection(Shape::eDirection _direction)
+	{
+		direction = (int)_direction;
+	}
+
+	//Point* getShape()
+	//{
+	//	return body;
+	//}
+
+	Point getBodyPoint(int i)
+	{
+		return body[i];
+	}
+};
+
