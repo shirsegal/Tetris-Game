@@ -16,7 +16,7 @@ private:
 	int index;
 	int bestMoveScore;
 	int bestMove[4];
-	void generateMoves();
+	int score;
 	void simulationMove();
 	int evaluateMove()const;
 	void copyAndResetArr(int from[arrSIZE], int moveScore);
@@ -31,5 +31,46 @@ private:
 	void moveAndEvaluateShapeSimulator(Shape temp, int side, bool rotate, int moveArr[arrSIZE]);
 	void keepRotating(int& i, int moveArr[arrSIZE], Shape shape);
 	void moveShapeOneDown(Shape shape);
+
+public:
+	void generateMoves();
+
+	void drawNewBoard(int playerIndex);
+	void initPlayerBoard();
+	void copyShapeToBoard();
+	bool loseGame();
+	void draw(int ch, int _x, int _y, int playerIndex);
+	void copyShapeToBoard(Board& _board, Shape _shape);
+	void checkIfThereIsFullLine(int playerIndex);
+	int getTheLowestY();
+	bool moveShape2();
+
+	//player ctor
+	ComputerPlayer(int i) : shape(myBoard) { index = i, this->initPlayerBoard(), score = 0; }
+
+	void getRandShape(bool color)
+	{
+		shape.getRandShape(color);
+	}
+
+	int getScore()
+	{
+		return score;
+	}
+
+	int getIndex()
+	{
+		return index;
+	}
+
+	bool  moveShape(GameConfig::eKeys key)
+	{
+		return shape.move(key, index);
+	}
+
+	void drawShape(char ch = '#')
+	{
+		shape.drawShape(index, ch);
+	}
 };
 
