@@ -19,7 +19,7 @@ private:
 	int score;
 	void simulationMove();
 	int evaluateMove()const;
-	void copyAndResetArr(int from[arrSIZE], int moveScore);
+	void copyArr(int from[arrSIZE], int moveScore);
 	void updateMoveArr(int arr[arrSIZE]);
 	void moveShapeDown(Shape& shape);
 	int evaluateMove(Shape shape);
@@ -27,10 +27,10 @@ private:
 	int getTheLowestY(Shape& shape);
 	int getTheHighestY(Shape& shape);
 	int getMin(int& a, int b) const;
-	bool checkAndRotate(bool& counterClock, int rotation, Shape shape, int moveArr[arrSIZE]);
-	void moveAndEvaluateShapeSimulator(Shape temp, int side, bool rotate, int moveArr[arrSIZE]);
-	void keepRotating(int& i, int moveArr[arrSIZE], Shape shape);
-	void moveShapeOneDown(Shape shape);
+	bool checkAndRotate(bool& counterClock, int rotation, Shape& shape, int moveArr[arrSIZE]);
+	bool moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE]);
+	void keepRotating(int& i, int moveArr[arrSIZE], Shape& shape);
+	void moveShapeOneDown(Shape& shape);
 
 public:
 	void generateMoves();
@@ -51,6 +51,7 @@ public:
 	void getRandShape(bool color)
 	{
 		shape.getRandShape(color);
+		generateMoves();
 	}
 
 	int getScore()

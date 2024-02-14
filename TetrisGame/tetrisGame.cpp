@@ -92,8 +92,6 @@ int TetrisGame::moveShape(ComputerPlayer& player1, ComputerPlayer& player2, bool
 		}
 	}
 
-	player1.generateMoves();
-	//moveShape1 = player1.moveShape2();
 	//Draw and delete the shape from the screen
 	player1.drawShape();
 	player2.drawShape();

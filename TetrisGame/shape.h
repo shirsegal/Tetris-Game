@@ -57,7 +57,7 @@ public:
 	//	return body;
 	//}
 
-	Point getBodyPoint(int i)
+	Point& getBodyPoint(int i)
 	{
 		return body[i];
 	}
