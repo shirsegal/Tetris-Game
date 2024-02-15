@@ -1,8 +1,9 @@
 #pragma once
 #include "shape.h"
 #include "board.h"
+#include "player.h"
 
-class ComputerPlayer
+class ComputerPlayer : public Player
 {
 public:
 	enum { arrSIZE = 5 };
@@ -11,8 +12,6 @@ public:
 
 
 private:
-	Shape shape;
-	Board myBoard;
 	int index;
 	int bestMoveScore;
 	int bestMove[4];
@@ -32,46 +31,27 @@ private:
 	void keepRotating(int& i, int moveArr[arrSIZE], Shape& shape);
 	void moveShapeOneDown(Shape& shape);
 
+	bool moveShape(GameConfig::eKeys key) override
+	{
+		return moveShape2(); //TODOOOOO!!!!!!!
+	}
+
 public:
 	void generateMoves();
 
-	void drawNewBoard(int playerIndex);
-	void initPlayerBoard();
-	void copyShapeToBoard();
-	bool loseGame();
-	void draw(int ch, int _x, int _y, int playerIndex);
 	void copyShapeToBoard(Board& _board, Shape _shape);
-	void checkIfThereIsFullLine(int playerIndex);
-	int getTheLowestY();
 	bool moveShape2();
 
 	//player ctor
-	ComputerPlayer(int i) : shape(myBoard) { index = i, this->initPlayerBoard(), score = 0; }
+	ComputerPlayer(int i) : Player(i) { }
 
-	void getRandShape(bool color)
+	void getRandShape(bool color) override
 	{
 		shape.getRandShape(color);
 		generateMoves();
 	}
 
-	int getScore()
-	{
-		return score;
-	}
+	~ComputerPlayer() {}
 
-	int getIndex()
-	{
-		return index;
-	}
-
-	bool  moveShape(GameConfig::eKeys key)
-	{
-		return shape.move(key, index);
-	}
-
-	void drawShape(char ch = '#')
-	{
-		shape.drawShape(index, ch);
-	}
 };
 

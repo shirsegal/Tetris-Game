@@ -7,6 +7,7 @@
 #include <conio.h> // for kbhit+getch
 #include <iostream>
 #include <Windows.h> 
+#include "humanPlayer.h"
 
 using namespace std;
 
@@ -31,14 +32,14 @@ int TetrisGame::startNewGame(bool color)
 	Board board;
 	board.drawBoards();
 
-	ComputerPlayer player1(0);
-	ComputerPlayer player2(1);
+	Player* player1 = new ComputerPlayer(0);
+	Player* player2 = new HumanPlayer(1);
 
 	bool losePlayer1 = false;
 	bool losePlayer2 = false;
 
-	player1.getRandShape(color);
-	player2.getRandShape(color);
+	player1->getRandShape(color);
+	player2->getRandShape(color);
 
 	//Continue the game untill we have a winner or someone stop the game
 	while (!losePlayer1 && !losePlayer2)
@@ -47,25 +48,25 @@ int TetrisGame::startNewGame(bool color)
 		if (res == Menu::eMenuKeys::EXIT)
 			return res;
 
-		losePlayer1 = player1.loseGame();
-		losePlayer2 = player2.loseGame();
+		losePlayer1 = player1->loseGame();
+		losePlayer2 = player2->loseGame();
 	}
 
 
 	// Determine the winner
 	if (losePlayer1 || losePlayer2)
-		finishGame(player1.getScore(), player2.getScore(), losePlayer1, losePlayer2);
+		finishGame(player1->getScore(), player2->getScore(), losePlayer1, losePlayer2);
 
 }
 
 //Give a shape for every player and move it down and with the player keys untill it touch the bottom
-int TetrisGame::moveShape(ComputerPlayer& player1, ComputerPlayer& player2, bool color)
+int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 {
 	GameConfig ch;
 	GameConfig key;
 
-	int player1Index = player1.getIndex();
-	int player2Index = player2.getIndex();
+	int player1Index = player1->getIndex();
+	int player2Index = player2->getIndex();
 	int keyPressed = noKeyPressed;
 	bool canRight2 = true, canLeft2 = true, canRight1 = true, canLeft1 = true, moveShape2 = true, moveShape1 = true;
 
@@ -84,8 +85,8 @@ int TetrisGame::moveShape(ComputerPlayer& player1, ComputerPlayer& player2, bool
 				clrscr();
 				Board board;
 				board.drawBoards();
-				player1.drawNewBoard(player1Index);
-				player2.drawNewBoard(player2Index);
+				player1->drawNewBoard(player1Index);
+				player2->drawNewBoard(player2Index);
 			}
 			else if (res == Menu::eMenuKeys::EXIT)//Exit game
 				return res;
@@ -93,45 +94,40 @@ int TetrisGame::moveShape(ComputerPlayer& player1, ComputerPlayer& player2, bool
 	}
 
 	//Draw and delete the shape from the screen
-	player1.drawShape();
-	player2.drawShape();
+	player1->drawShape();
+	player2->drawShape();
 	Sleep(500);
-	player1.drawShape(' ');
-	player2.drawShape(' ');
-
-	moveShape1 = player1.moveShape2();
-	moveShape2 = player2.moveShape2();
+	player1->drawShape(' ');
+	player2->drawShape(' ');
 
 	//Check if one of the players press a key and move the shape with this key
-	//for (int i = 0; i < GameConfig::numOfKeys; i++)
-	//{
+	for (int i = 0; i < GameConfig::numOfKeys; i++)
+	{
+		int j = (i % GameConfig::numOfMoves);
+		if (ch.p1Keys[i] == keyPressed)
+			moveShape1 = player1->moveShape((GameConfig::eKeys)j);
 
-	//	int j = (i % GameConfig::numOfMoves);
-	//	//if (ch.p1Keys[i] == keyPressed)
-	//		moveShape1 = player1.moveShape2();
-
-	//	//if (ch.p2Keys[i] == keyPressed)
-	//		moveShape2 = player2.moveShape2();
-	//}
-
+		if (ch.p2Keys[i] == keyPressed)
+			moveShape2 = player2->moveShape((GameConfig::eKeys)j);
+	}
 
 	//Move the shapes down
-	moveShape1 = player1.moveShape((GameConfig::eKeys)keyPressed);
-	moveShape2 = player2.moveShape((GameConfig::eKeys)keyPressed);
+	moveShape1 = player1->moveShape((GameConfig::eKeys)keyPressed);
+	moveShape2 = player2->moveShape((GameConfig::eKeys)keyPressed);
 
 	//If the shape cant move copy to the player board and get a new shape
 	if (moveShape1 == false)
 	{
-		player1.copyShapeToBoard();
-		player1.checkIfThereIsFullLine(player1Index);
-		player1.getRandShape(color);
+		player1->copyShapeToBoard();
+		player1->checkIfThereIsFullLine(player1Index);
+		player1->getRandShape(color);
 	}
 
 	if (moveShape2 == false)
 	{
-		player2.copyShapeToBoard();
-		player2.checkIfThereIsFullLine(player2Index);
-		player2.getRandShape(color);
+		player2->copyShapeToBoard();
+		player2->checkIfThereIsFullLine(player2Index);
+		player2->getRandShape(color);
 	}
 	return 0;
 }

@@ -10,13 +10,17 @@ class Player
 {
 	int score;
 	int index;
-	Board myBoard;
-	Shape shape;
+
 	
 	int getTheLowestY();
 	void copyNewBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH], int y);
 	void initBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH]);
 	void draw(int ch, int _x, int _y,int playerIndex);
+
+protected:
+	Board myBoard;
+	Shape shape;
+
 
 public:
 
@@ -49,14 +53,10 @@ public:
 		shape.drawShape(index, ch);
 	}
 
-	bool  moveShape(GameConfig::eKeys key)
-	{
-		return shape.move(key, index);
-	}
+	virtual bool moveShape(GameConfig::eKeys key) = 0;
 
-	void getRandShape(bool color)
-	{
-		shape.getRandShape(color);
-	}
+	virtual void getRandShape(bool color) = 0;
+
+	virtual ~Player() {}
 };
 
