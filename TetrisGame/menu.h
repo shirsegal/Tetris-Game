@@ -2,8 +2,10 @@
 class Menu
 {
 
+	bool checkIfPlayWithColor();
+
 public:
-	enum eMenuKeys { START_NO_COLORS = '1', CONTINUE = '2', START_COLORS = '3', INSTRUCTIONS = '8', EXIT = '9' };
+	enum eMenuKeys { START_HvsH = '1', START_HvsC = '2', START_CvsC = '3', CONTINUE = '4', INSTRUCTIONS = '8', EXIT = '9' };
 	int goToMenu(bool gamePaused);
 	void printMenu(bool gamePaused);
 	bool isValidKey(char playerChoice, bool gamePaused);

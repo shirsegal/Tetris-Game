@@ -18,14 +18,17 @@ int Menu::goToMenu(bool gamePaused)
 
 	switch (playerChoice)
 	{
-	case (int)eMenuKeys::START_NO_COLORS://Start a new black and white tetris game
+	case (int)eMenuKeys::START_HvsH:
 		clrscr();
-		return game.startNewGame(false);
+		return game.startNewGame(checkIfPlayWithColor(), 'h', 'h');//Start a game human VS human
 		break;
-
-	case (int)eMenuKeys::START_COLORS://Start a new tetris game with colors
+	case (int)eMenuKeys::START_HvsC:
 		clrscr();
-		return game.startNewGame(true);
+		return game.startNewGame(checkIfPlayWithColor(), 'h', 'c');//Start a game human VS computer
+		break;
+	case (int)eMenuKeys::START_CvsC:
+		clrscr();
+		return game.startNewGame(checkIfPlayWithColor(), 'c', 'c');//Start a game computer VS computer
 		break;
 
 	case (int)eMenuKeys::INSTRUCTIONS://Print tetris game instructions and players keys
@@ -81,10 +84,11 @@ void Menu::printMenu(bool gamePaused)
 	config.setBlackFont();
 
 	cout << "TETRIS GAME\n" << endl;
-	cout << "(1) Start a new game - without colors" << endl;
+	cout << "(1) Start a new game - Human vs Human" << endl;
+	cout << "(2) Start a new game - Human vs Computer" << endl;
+	cout << "(3) Start a new game - Computer vs Computer" << endl;
 	if (gamePaused == true)
-		cout << "(2) Continue a paused game" << endl;
-	cout << "(3) Start a new game - with colors" << endl;
+		cout << "(4) Continue a paused game" << endl;
 	cout << "(8) Present instructions and keys" << endl;
 	cout << "(9) EXIT" << endl;
 };
@@ -92,5 +96,21 @@ void Menu::printMenu(bool gamePaused)
 //Check if the player choose a valid menu key
 bool Menu::isValidKey(char playerChoice, bool gamePaused)
 {
-	return playerChoice == START_COLORS || (playerChoice == CONTINUE && gamePaused) || playerChoice == START_NO_COLORS || playerChoice == INSTRUCTIONS || playerChoice == EXIT;
+	return playerChoice == START_HvsH || playerChoice == START_HvsC || playerChoice == START_CvsC || (playerChoice == CONTINUE && gamePaused) || playerChoice == INSTRUCTIONS || playerChoice == EXIT;
+}
+
+
+bool Menu::checkIfPlayWithColor()
+{
+	cout << "Do you want to play with color?\n" << endl;
+	cout << "(1) Yes" << endl;
+	cout << "(2) No" << endl;
+
+	char playerChoice = _getch();
+	while (playerChoice != '1' && playerChoice != '2')
+		playerChoice = _getch();
+
+	clrscr();
+	if (playerChoice == '1')return true;
+	else return false;
 }

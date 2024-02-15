@@ -12,10 +12,10 @@ public:
 
 
 private:
-	int index;
 	int bestMoveScore;
 	int bestMove[4];
 	int score;
+	int noKeyPressed = 9;
 	void simulationMove();
 	int evaluateMove()const;
 	void copyArr(int from[arrSIZE], int moveScore);
@@ -31,16 +31,12 @@ private:
 	void keepRotating(int& i, int moveArr[arrSIZE], Shape& shape);
 	void moveShapeOneDown(Shape& shape);
 
-	bool moveShape(GameConfig::eKeys key) override
-	{
-		return moveShape2(); //TODOOOOO!!!!!!!
-	}
+	bool moveShape(GameConfig::eKeys key) override;
 
 public:
 	void generateMoves();
 
 	void copyShapeToBoard(Board& _board, Shape _shape);
-	bool moveShape2();
 
 	//player ctor
 	ComputerPlayer(int i) : Player(i) { }

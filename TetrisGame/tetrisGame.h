@@ -5,9 +5,11 @@
 class TetrisGame
 {
 	bool gameRunning;
+	void createNewPlayers(char p1, char p2, Player*& player1, Player*& player2);
+
 public:
 	bool runGame();
-	int startNewGame(bool color);
+	int startNewGame(bool color, char p1, char p2);
 	int moveShape(Player* player1, Player* player2, bool color);
 	bool loseGame(ComputerPlayer p);
 	int noKeyPressed = 9;

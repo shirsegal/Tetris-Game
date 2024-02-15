@@ -65,7 +65,7 @@ void ComputerPlayer::generateMoves()
 			down = moveAndEvaluateShapeSimulator(temp, RIGHT, rotate, moveArr);
 			if (rotate)
 			{
-				res = checkAndRotate(counterClock, rotation, shape, moveArr);
+				res = checkAndRotate(counterClock, rotation, temp, moveArr);
 				if (res && moveArr[3] < rotation)
 					keepRotating(rotation, moveArr, temp);
 				if (moveArr[3] == rotation)
@@ -190,13 +190,13 @@ void ComputerPlayer::resetArr(int arr[arrSIZE])
 //check if the shape can rotate if can rotate the shape
 bool ComputerPlayer::checkAndRotate(bool& counterClock, int rotation, Shape& shape, int moveArr[arrSIZE])
 {
-	if (!counterClock && shape.rotateClockwise(index))
+	if (!counterClock && shape.rotateClockwise(getIndex()))
 	{
 		moveArr[3] += 1;
 		return true;
 	}
 
-	if ((counterClock || rotation == 0) && shape.rotateCounterClockwise(index))
+	if ((counterClock || rotation == 0) && shape.rotateCounterClockwise(getIndex()))
 	{
 		moveArr[4] = COUNTERCLOCKWISE;
 		moveArr[3] += 1;
@@ -239,13 +239,13 @@ bool ComputerPlayer::moveAndEvaluateShapeSimulator(Shape& temp, int side, bool r
 void ComputerPlayer::keepRotating(int& i, int moveArr[arrSIZE], Shape& shape)
 {
 	if (moveArr[4] == CLOCKWISE)
-		while (moveArr[3] < i && shape.rotateClockwise(index))
+		while (moveArr[3] < i && shape.rotateClockwise(getIndex()))
 		{
 			moveShapeOneDown(shape);
 			moveArr[3] += 1;
 		}
 	else
-		while (moveArr[3] < i && shape.rotateCounterClockwise(index))
+		while (moveArr[3] < i && shape.rotateCounterClockwise(getIndex()))
 		{
 			moveShapeOneDown(shape);
 			moveArr[3] += 1;
@@ -278,38 +278,42 @@ void ComputerPlayer::copyShapeToBoard(Board& _board, Shape _shape)
 }
 
 
-bool ComputerPlayer::moveShape2()
+//Move the shape according to the best move arr and move the shape down
+bool ComputerPlayer::moveShape(GameConfig::eKeys key)
 {
+	int k = noKeyPressed;
 	bool res = true;
-	while (bestMove[1] != 0)
+
+	if (bestMove[1] != 0)
 	{
 		if (bestMove[0] == 0)
-			res = shape.move(GameConfig::eKeys::LEFT, index);
+			k = (int)GameConfig::eKeys::LEFT;
 		else
-			res = shape.move(GameConfig::eKeys::RIGHT, index);
+			k = (int)GameConfig::eKeys::RIGHT;
 		bestMove[1] -= 1;
 	}
-	while (bestMove[3] != 0)
+	else if (bestMove[3] != 0)
 	{
 		if (bestMove[4] == 0)
-			res = shape.move(GameConfig::eKeys::ROTATE_CLOCKWISE, index);
+			k = (int)GameConfig::eKeys::ROTATE_CLOCKWISE;
 		else
-			res = shape.move(GameConfig::eKeys::ROTATE_COUNTER_CLOCKWISE, index);
+			k = (int)GameConfig::eKeys::ROTATE_COUNTER_CLOCKWISE;
 		bestMove[3] -= 1;
 	}
-	while (bestMove[2] != 0)
+	else if (bestMove[2] != 0)
 	{
 		if (bestMove[0] == 0)
-			res = shape.move(GameConfig::eKeys::LEFT, index);
+			k = (int)GameConfig::eKeys::LEFT;
 		else
-			res = shape.move(GameConfig::eKeys::RIGHT, index);
+			k = (int)GameConfig::eKeys::RIGHT;
 		bestMove[2] -= 1;
 	}
-	res = shape.move(GameConfig::eKeys::DROP, index);
-	return res;
+
+	if (k != noKeyPressed)
+		res = shape.move((GameConfig::eKeys)k, getIndex());//Move shape with the key from the best Movearr
+
+	if (!res)return res;
+
+	return shape.move((GameConfig::eKeys)noKeyPressed, getIndex());//Move shape down
+
 }
-//moveArr[0] => 0 = left, 1 = right; 
-//moveArr[1] => move before rotate; 
-//moveArr[2] => move after rotate; 
-//moveArr[3] => num of rotations; 
-//moveArr[4] => clockWise = 0, counterClockwise = 1; 

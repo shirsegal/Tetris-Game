@@ -25,15 +25,32 @@ bool TetrisGame::runGame()
 	return true;
 }
 
+void TetrisGame::createNewPlayers(char p1, char p2, Player*& player1, Player*& player2)
+{
+	if (p1 == 'h') {
+		player1 = new HumanPlayer(0);
+	}
+	else {
+		player1 = new ComputerPlayer(0);
+	}
+	if (p2 == 'h') {
+		player2 = new HumanPlayer(1);
+	}
+	else {
+		player2 = new ComputerPlayer(1);
+	}
+}
 
 //Start a new Tetris game with 2 players
-int TetrisGame::startNewGame(bool color)
+int TetrisGame::startNewGame(bool color, char p1, char p2)
 {
 	Board board;
 	board.drawBoards();
 
-	Player* player1 = new ComputerPlayer(0);
-	Player* player2 = new HumanPlayer(1);
+	Player* player1 = nullptr;
+	Player* player2 = nullptr;
+
+	createNewPlayers(p1, p2, player1, player2);
 
 	bool losePlayer1 = false;
 	bool losePlayer2 = false;
