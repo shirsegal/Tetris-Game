@@ -15,7 +15,7 @@ public:
 	void initPlayerBoard();
 	bool loseGame();
 	int checkIfThereIsFullLine(int _numOfRows);
-	int countHoles(int theHighestY) const;
+	int countHoles(int y, int x) const;
 	int calculateBoardSurface() const;
 	int getColumnHeight(int x) const;
 

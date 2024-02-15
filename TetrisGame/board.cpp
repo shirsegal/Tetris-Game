@@ -129,18 +129,19 @@ void Board::copyNewBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WID
 }
 
 //The function count the number of holles in board
-int Board::countHoles(int theHighestY) const
+int Board::countHoles(int y, int x) const
 {
 	int countHoles = 0;
 
-	for (int i = theHighestY; (i - 2) < GameConfig::GAME_HEIGHT; i++)
+	for (int i = y; (i + 1) < GameConfig::GAME_HEIGHT; i++)
 	{
-		for (int j = 0; j < GameConfig::GAME_WIDTH; j++)
+		if (gameBoard[i + 1][x] != ' ')
 		{
-			if (gameBoard[i - 2][j] == ' ' && gameBoard[i - 3][j] != ' ')
-			{
-				countHoles++;
-			}
+			return countHoles;
+		}
+		if (gameBoard[i + 1][x] == ' ')
+		{
+			countHoles++;
 		}
 	}
 	return countHoles;
@@ -161,7 +162,7 @@ int Board::getColumnHeight(int x) const
 int Board::calculateBoardSurface() const
 {
 	int roughness = 0;
-	for (int x = 0; x < (GameConfig::GAME_WIDTH - 1); x++) 
+	for (int x = 0; x < (GameConfig::GAME_WIDTH - 1); x++)
 	{
 		int height1 = getColumnHeight(x);
 		int height2 = getColumnHeight(x + 1);

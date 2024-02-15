@@ -6,7 +6,7 @@ void ComputerPlayer::generateMoves()
 	Shape temp = shape;
 	bestMoveScore = -2000;
 	int moveScore;
-	bool canMove, rotate = false, counterClock = false, res, down=true;
+	bool canMove, rotate = false, counterClock = false, res, down = true;
 	int moveArr[arrSIZE] = { 0 };
 	//moveArr[0] => 0 = left, 1 = right; 
 	//moveArr[1] => move before rotate; 
@@ -28,7 +28,7 @@ void ComputerPlayer::generateMoves()
 
 		down = true;
 		//check all the possible positions the left side of the board
-		while (temp.getBodyPoint(0).getX() > 1 && temp.getBodyPoint(1).getX() > 1 && temp.getBodyPoint(2).getX() > 1 && temp.getBodyPoint(3).getX() > 1 && temp.canMoveLeft()&& down)
+		while (temp.getBodyPoint(0).getX() > 1 && temp.getBodyPoint(1).getX() > 1 && temp.getBodyPoint(2).getX() > 1 && temp.getBodyPoint(3).getX() > 1 && temp.canMoveLeft() && down)
 		{
 			down = moveAndEvaluateShapeSimulator(temp, LEFT, rotate, moveArr);
 			if (rotate)
@@ -124,11 +124,18 @@ int ComputerPlayer::evaluateMove(Shape shape)
 
 	// 2. Number of Lines Cleared
 	int linesCleared = simulatedBoard.checkIfThereIsFullLine(numOfRows); //בודקת שורות ריקות
-	shapeScore += linesCleared * 10;
+	shapeScore += linesCleared * 100000;
 
 	// 3. Number of Holes Created
-	int holesCreated = simulatedBoard.countHoles(theHighestY); //בודקת חורים
-	shapeScore -= holesCreated * 5;
+	int holesCreated = 0;
+	int _x, y;
+	for (size_t i = 0; i < Shape::SIZE; i++)
+	{
+		_x = (shape.getBodyPoint(i)).getX() - 1;
+		y = (shape.getBodyPoint(i)).getY() - 2;
+		holesCreated += simulatedBoard.countHoles(y, _x); //בודקת חורים
+	}
+	shapeScore -= holesCreated * 50;
 
 	// 4. Smoothness of the Surface
 	int surfaceRoughness = simulatedBoard.calculateBoardSurface(); //בודקת כמה חלק השטח - הפרשי גבהים
@@ -137,7 +144,7 @@ int ComputerPlayer::evaluateMove(Shape shape)
 	// 5. Proximity to Edges
 	int x = shape.getLeftmostEdge();
 	int distanceToEdges = getMin(x, (GameConfig::GAME_WIDTH - x - 1)); //עדיף שלא יהיה קרוב לקצוות
-	shapeScore -= distanceToEdges * 2;
+	shapeScore += distanceToEdges * 2;
 
 	return shapeScore;
 }
