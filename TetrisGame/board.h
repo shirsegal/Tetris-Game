@@ -1,9 +1,11 @@
 #pragma once
 #include "gameConfig.h"
 #include "goToxy.h"
+#include "point.h"
 
 class Board
 {
+	Point bomb;
 	int gameBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
 	void initBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH]);
 	void copyNewBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH], int y);
@@ -18,6 +20,7 @@ public:
 	int countHoles(int y, int x) const;
 	int calculateBoardSurface() const;
 	int getColumnHeight(int x) const;
+	void handleBombExploade();
 
 
 	int getBoardYX(int y, int x)
@@ -28,6 +31,11 @@ public:
 	void setBoardYX(int y, int x, int set)
 	{
 		gameBoard[y][x] = set;
+	}
+
+	void setBomb(int x, int y)
+	{
+		bomb.setXY(x, y);
 	}
 
 };

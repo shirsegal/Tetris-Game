@@ -12,9 +12,11 @@ private:
 	enum startVal { X = 6, Y = 2 };
 	Point body[SIZE];
 	Board& myBoard;
+	Point bomb;
+	bool isBomb = false;
 	enum class eDistance { FORx = 1, FORy = 2 };
 	enum class ePlaces { FIRST = 0, SECOND, THIRD, FOURTH };
-	enum class eShapes { squereShape = 1, LRightShape, LLeftShape, TShape, ZLeftfShape, ZRightfShape, columShape };
+	enum class eShapes { squereShape = 1, LRightShape, LLeftShape, TShape, ZLeftfShape, ZRightfShape, columShape, bomb };
 	enum class eColors { BLACK, RED, BLUE, GREEN, PURPLE, YELLOW };
 	enum class eDirection { HORIZON = 1, VERTICAL, UPSIDE_DOWN, UPSIDE_LEFT };
 	int direction;
@@ -52,14 +54,15 @@ public:
 		direction = (int)_direction;
 	}
 
-	//Point* getShape()
-	//{
-	//	return body;
-	//}
 
 	Point& getBodyPoint(int i)
 	{
 		return body[i];
+	}
+	
+	bool getIsBomb()
+	{
+		return isBomb;
 	}
 };
 

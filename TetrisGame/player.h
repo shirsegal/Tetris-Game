@@ -29,6 +29,7 @@ public:
 	void copyShapeToBoard();
 	bool loseGame();
 	void checkIfThereIsFullLine(int playerIndex);
+	void updateBoardAfterBomb();
 
 	//player ctor
 	Player(int i): shape(myBoard) { index = i, this->initPlayerBoard(), score = 0; }
@@ -51,6 +52,11 @@ public:
 	void drawShape(char ch = '#')
 	{
 		shape.drawShape(index, ch);
+	}
+
+	bool isBomb()
+	{
+		return shape.getIsBomb();
 	}
 
 	virtual bool moveShape(GameConfig::eKeys key) = 0;

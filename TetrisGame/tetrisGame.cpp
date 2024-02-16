@@ -139,15 +139,29 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 	//If the shape cant move copy to the player board and get a new shape
 	if (moveShape1 == false)
 	{
-		player1->copyShapeToBoard();
-		player1->checkIfThereIsFullLine(player1Index);
+		if (player1->isBomb())
+		{
+			player1->updateBoardAfterBomb();
+		}
+		else
+		{
+			player1->copyShapeToBoard();
+			player1->checkIfThereIsFullLine(player1Index);
+		}
 		player1->getRandShape(color);
 	}
 
 	if (moveShape2 == false)
 	{
-		player2->copyShapeToBoard();
-		player2->checkIfThereIsFullLine(player2Index);
+		if (player2->isBomb())
+		{
+			player2->updateBoardAfterBomb();
+		}
+		else
+		{
+			player2->copyShapeToBoard();
+			player2->checkIfThereIsFullLine(player2Index);
+		}
 		player2->getRandShape(color);
 	}
 	return 0;

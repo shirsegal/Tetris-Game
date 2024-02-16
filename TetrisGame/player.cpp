@@ -88,6 +88,11 @@ void Player::draw(int ch, int _x, int _y, int playerIndex)
 	else cout << ' ';
 }
 
+void Player::updateBoardAfterBomb()
+{
+	myBoard.handleBombExploade();
+}
+
 
 
 

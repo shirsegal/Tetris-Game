@@ -88,15 +88,22 @@ void Shape::setShape(int shapeNum, int shapeColor)
 		body[(int)ePlaces::FOURTH].setXY(6, 3);
 	}
 	break;
+	case (int)eShapes::bomb:
+	{
+		isBomb = true;
+		bomb.setPoint(6, 2, '@');
 	}
+	break;
+	}
+
 }
 
 //The function return the x's shape that close to left border
-int Shape::getLeftmostEdge() 
+int Shape::getLeftmostEdge()
 {
-	int leftmost = GameConfig::GAME_WIDTH; 
+	int leftmost = GameConfig::GAME_WIDTH;
 
-	for (int i = 0; i < SIZE; ++i) 
+	for (int i = 0; i < SIZE; ++i)
 	{
 		int x = body[i].getX();
 		if (x < leftmost)
@@ -108,7 +115,7 @@ int Shape::getLeftmostEdge()
 
 void Shape::getRandShape(bool color)
 {
-	int sNum = rand() % 7 + 1;
+	int sNum = rand() % 8 + 1; //without bomb 7
 	int colorNum = (int)eColors::BLACK;
 
 	if (color)
@@ -179,12 +186,12 @@ bool Shape::rotateClockwise(int playerIndex)
 //The function check if can do the rotate before it change
 bool Shape::canRotate()
 {
-	
+
 	for (Point& p : body)
 	{
 		int x = p.getX() - (int)eDistance::FORx;
 		int y = p.getY() - (int)eDistance::FORy;
-		
+
 		//gameBoard[y][x] != ' ' בורד קודם
 		if (myBoard.getBoardYX(y, x) != ' ' || x <= (int)eDistance::FORx ||
 			x >= GameConfig::GAME_WIDTH || y >= (GameConfig::GAME_HEIGHT + (int)eDistance::FORx))
@@ -211,12 +218,22 @@ void Shape::drawShape(int playerIndex, char ch)
 //check if the shape touch an existing shape in the board
 bool Shape::reachExistingShape()
 {
-	for (int i = 0; i < Shape::SIZE; i++)
+	if (isBomb)
 	{
-		int x = body[i].getX() - (int)eDistance::FORx;
-		int y = body[i].getY() - (int)eDistance::FORy;
+		int x = bomb.getX() - (int)eDistance::FORx;
+		int y = bomb.getY() - (int)eDistance::FORy;
 		if (myBoard.getBoardYX(y + (int)eDistance::FORx, x) != ' ')
 			return true;
+	}
+	else
+	{
+		for (int i = 0; i < Shape::SIZE; i++)
+		{
+			int x = body[i].getX() - (int)eDistance::FORx;
+			int y = body[i].getY() - (int)eDistance::FORy;
+			if (myBoard.getBoardYX(y + (int)eDistance::FORx, x) != ' ')
+				return true;
+		}
 	}
 	return false;
 }
@@ -225,10 +242,10 @@ bool Shape::reachExistingShape()
 bool Shape::move(GameConfig::eKeys key, int playerIndex)
 {
 	bool onSideLeft, onSideRight, canRight = true, canLeft = true, touchShape;
-	if (key == GameConfig::eKeys::ROTATE_CLOCKWISE)
+	if (key == GameConfig::eKeys::ROTATE_CLOCKWISE && isBomb == false)
 		rotateClockwise(playerIndex);
 
-	else if (key == GameConfig::eKeys::ROTATE_COUNTER_CLOCKWISE)
+	else if (key == GameConfig::eKeys::ROTATE_COUNTER_CLOCKWISE && isBomb == false)
 		rotateCounterClockwise(playerIndex);
 
 	else if (key == GameConfig::eKeys::DROP)
@@ -254,12 +271,18 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 
 		for (int i = 0; i < SIZE; i++)
 		{
-			body[i].move(key, onSideLeft, onSideRight, canLeft, canRight);
+			if (isBomb)
+				bomb.move(key, onSideLeft, onSideRight, canLeft, canRight);
+			else
+				body[i].move(key, onSideLeft, onSideRight, canLeft, canRight);
 		}
 	}
 	else
 	{
-		drawShape(playerIndex);
+		if (isBomb)
+			myBoard.setBomb(bomb.getX(), bomb.getY());
+		else
+			drawShape(playerIndex);
 		return false;
 	}
 }
@@ -267,12 +290,21 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 //The function check if the shape can move left
 bool Shape::canMoveLeft()
 {
-
-	for (int i = 0; i < Shape::SIZE; i++)
+	if (isBomb)
 	{
-		if (myBoard.getBoardYX(body[i].getY() - (int)eDistance::FORy, body[i].getX() - (int)eDistance::FORy) != ' ')
+		if (myBoard.getBoardYX(bomb.getY() - (int)eDistance::FORy, bomb.getX() - (int)eDistance::FORy) != ' ')
 		{
 			return false;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < Shape::SIZE; i++)
+		{
+			if (myBoard.getBoardYX(body[i].getY() - (int)eDistance::FORy, body[i].getX() - (int)eDistance::FORy) != ' ')
+			{
+				return false;
+			}
 		}
 	}
 	return true;
@@ -281,12 +313,21 @@ bool Shape::canMoveLeft()
 //The function check if the shape can move right
 bool Shape::canMoveRight()
 {
-
-	for (int i = 0; i < Shape::SIZE; i++)
+	if (isBomb)
 	{
-		if (myBoard.getBoardYX(body[i].getY() - (int)eDistance::FORy, body[i].getX()) != ' ')
+		if (myBoard.getBoardYX(bomb.getY() - (int)eDistance::FORy, bomb.getX()) != ' ')
 		{
 			return false;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < Shape::SIZE; i++)
+		{
+			if (myBoard.getBoardYX(body[i].getY() - (int)eDistance::FORy, body[i].getX()) != ' ')
+			{
+				return false;
+			}
 		}
 	}
 	return true;
@@ -294,30 +335,55 @@ bool Shape::canMoveRight()
 
 void Shape::dropShape()
 {
-	Point temp[SIZE];
-	dupShape(body, temp);
-
-	for (int i = 0; i < SIZE; i++)
+	if (isBomb)
 	{
-		int _y = body[i].getY() + 1;
+		Point tempB;
+		int _y = bomb.getY() + 1;
 		if (_y >= GameConfig::GAME_HEIGHT + (int)eDistance::FORy)
 			return;
 		else if (reachExistingShape())
 			return;
 
-		int _x = body[i].getX();
-		temp[i].setPoint(_x, _y);
+		int _x = bomb.getX();
+		tempB.setPoint(_x, _y, '@');
+		bomb = tempB;
 	}
-	dupShape(temp, body);
+	else
+	{
+		Point temp[SIZE];
+		dupShape(body, temp);
+
+		for (int i = 0; i < SIZE; i++)
+		{
+			int _y = body[i].getY() + 1;
+			if (_y >= GameConfig::GAME_HEIGHT + (int)eDistance::FORy)
+				return;
+			else if (reachExistingShape())
+				return;
+
+			int _x = body[i].getX();
+			temp[i].setPoint(_x, _y);
+		}
+		dupShape(temp, body);
+	}
+
 }
 
 //Check if the shape is in the bottom
 bool Shape::inBottom()
 {
-	for (Point& p : body)
+	if (isBomb)
 	{
-		if (p.getY() >= (GameConfig::GAME_HEIGHT + (int)eDistance::FORx))
+		if (bomb.getY() >= (GameConfig::GAME_HEIGHT + (int)eDistance::FORx))
 			return true;
+	}
+	else
+	{
+		for (Point& p : body)
+		{
+			if (p.getY() >= (GameConfig::GAME_HEIGHT + (int)eDistance::FORx))
+				return true;
+		}
 	}
 	return false;
 }
