@@ -180,9 +180,9 @@ void Board::handleBombExploade()
 
 	if ((x - 4) > 0)
 	{
-		for (size_t i = 0; i < (x - 4); i++)
+		for (int i = 0; i < (x - 4); i++)
 		{
-			for (size_t j = 0; j < (GameConfig::GAME_HEIGHT - 1); j++)
+			for (int j = 0; j < GameConfig::GAME_HEIGHT; j++)
 			{
 				if (gameBoard[j][i] != ' ')
 				{
@@ -192,11 +192,11 @@ void Board::handleBombExploade()
 		}
 	}
 
-	if ((x + 4) < GameConfig::GAME_WIDTH)
+	if ((x + 4) < (GameConfig::GAME_WIDTH - 1))
 	{
-		for (size_t i = x + 4; i < GameConfig::GAME_WIDTH; i++)
+		for (int i = x + 5; i < GameConfig::GAME_WIDTH; i++)
 		{
-			for (size_t j = 0; j < (GameConfig::GAME_HEIGHT - 1); j++)
+			for (int j = 0; j < GameConfig::GAME_HEIGHT; j++)
 			{
 				if (gameBoard[j][i] != ' ')
 				{
@@ -205,29 +205,17 @@ void Board::handleBombExploade()
 			}
 		}
 	}
-
-	//for (size_t j = y + 4; j < GameConfig::GAME_HEIGHT; j++)
-	//{
-	//	for (size_t i = x - 4; i < (x + 4 && GameConfig::GAME_WIDTH); i++)
-	//	{
-	//		if (gameBoard[j][i] != ' ')
-	//		{
-	//			tempBoard[j][i] = gameBoard[j][i];
-	//		}
-
-	//	}
-	//}
 
 	int count = 0;
-	for (size_t j = 0; j < y - 4; j++)
-	{
-		count++;
-		for (size_t i = x - 4; i < (x + 4 && GameConfig::GAME_WIDTH); i++)
+	for (int j = 0; j < y - 4; j++)
+	{	
+		for (int i = x - 4; i < (x + 4 & GameConfig::GAME_WIDTH); i++)
 		{
 			tempBoard[(y + 4) + count][i] = gameBoard[j][i];
 		}
+		count++;
 	}
 
-	copyNewBoard(tempBoard, 0);
+	copyNewBoard(tempBoard, (GameConfig::GAME_HEIGHT + 1));
 	checkIfThereIsFullLine(0);
 }

@@ -7,6 +7,7 @@
 //The function is menage what shape on board now
 void Shape::setShape(int shapeNum, int shapeColor)
 {
+	isBomb = false;
 	switch (shapeColor)
 	{
 	case (int)eColors::BLACK:
@@ -211,8 +212,18 @@ void Shape::dupShape(Point from[SIZE], Point to[SIZE])
 //The function draw current shape
 void Shape::drawShape(int playerIndex, char ch)
 {
-	for (int i = 0; i < SIZE; i++)
-		body[i].draw(ch, playerIndex, color);
+	if (isBomb)
+	{
+		if (ch == '#')
+			bomb.draw('@', playerIndex, color);
+		else
+			bomb.draw(ch, playerIndex, color);
+	}
+	else
+	{
+		for (int i = 0; i < SIZE; i++)
+			body[i].draw(ch, playerIndex, color);
+	}
 }
 
 //check if the shape touch an existing shape in the board
@@ -268,13 +279,16 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 		onSideLeft = isOnSideLeft();
 		onSideRight = isOnSideRight();
 
-
-		for (int i = 0; i < SIZE; i++)
+		if (isBomb)
 		{
-			if (isBomb)
-				bomb.move(key, onSideLeft, onSideRight, canLeft, canRight);
-			else
+			bomb.move(key, onSideLeft, onSideRight, canLeft, canRight);
+		}
+		else
+		{
+			for (int i = 0; i < SIZE; i++)
+			{
 				body[i].move(key, onSideLeft, onSideRight, canLeft, canRight);
+			}
 		}
 	}
 	else

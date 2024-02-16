@@ -141,7 +141,7 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 	{
 		if (player1->isBomb())
 		{
-			player1->updateBoardAfterBomb();
+			player1->updateBoardAfterBomb(player1Index);
 		}
 		else
 		{
@@ -155,12 +155,13 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 	{
 		if (player2->isBomb())
 		{
-			player2->updateBoardAfterBomb();
+			player2->updateBoardAfterBomb(player2Index);
 		}
 		else
 		{
 			player2->copyShapeToBoard();
 			player2->checkIfThereIsFullLine(player2Index);
+
 		}
 		player2->getRandShape(color);
 	}

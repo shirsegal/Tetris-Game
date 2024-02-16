@@ -56,7 +56,7 @@ void Player::checkIfThereIsFullLine(int playerIndex)
 
 
 //The function draw the board on the screen
-void Player::drawNewBoard(int playerIndex) //אפשר להעביר אותה ואת דרואו אולי גם לבורד
+void Player::drawNewBoard(int playerIndex) 
 {
 	for (int i = 0; i < GameConfig::GAME_HEIGHT; i++)
 	{
@@ -88,9 +88,10 @@ void Player::draw(int ch, int _x, int _y, int playerIndex)
 	else cout << ' ';
 }
 
-void Player::updateBoardAfterBomb()
+void Player::updateBoardAfterBomb(int playerIndex)
 {
 	myBoard.handleBombExploade();
+	drawNewBoard(playerIndex);
 }
 
 

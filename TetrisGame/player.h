@@ -29,7 +29,7 @@ public:
 	void copyShapeToBoard();
 	bool loseGame();
 	void checkIfThereIsFullLine(int playerIndex);
-	void updateBoardAfterBomb();
+	void updateBoardAfterBomb(int playerIndex);
 
 	//player ctor
 	Player(int i): shape(myBoard) { index = i, this->initPlayerBoard(), score = 0; }
