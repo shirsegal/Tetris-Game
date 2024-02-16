@@ -102,7 +102,7 @@ bool Menu::isValidKey(char playerChoice, bool gamePaused)
 
 bool Menu::checkIfPlayWithColor()
 {
-	cout << "Do you want to play with color?\n" << endl;
+	cout << "Do you want to play with colors?" << endl;
 	cout << "(1) Yes" << endl;
 	cout << "(2) No" << endl;
 

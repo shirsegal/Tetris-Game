@@ -8,6 +8,7 @@
 #include <iostream>
 #include <Windows.h> 
 #include "humanPlayer.h"
+#include "computerPlayer.h"
 
 using namespace std;
 
@@ -27,17 +28,20 @@ bool TetrisGame::runGame()
 
 void TetrisGame::createNewPlayers(char p1, char p2, Player*& player1, Player*& player2)
 {
+	int level;
 	if (p1 == 'h') {
 		player1 = new HumanPlayer(0);
 	}
 	else {
-		player1 = new ComputerPlayer(0);
+		level = chooseComputerLevel(1);
+		player1 = new ComputerPlayer(0, level);
 	}
 	if (p2 == 'h') {
 		player2 = new HumanPlayer(1);
 	}
 	else {
-		player2 = new ComputerPlayer(1);
+		level = chooseComputerLevel(2);
+		player2 = new ComputerPlayer(1, level);
 	}
 }
 
@@ -188,4 +192,24 @@ void TetrisGame::finishGame(int score1, int score2, bool losePlayer1, bool loseP
 
 	Menu menu;
 	menu.goToMenu(false);
+}
+
+char TetrisGame::chooseComputerLevel(int playerNum)
+{
+	cout << "Choose computer player " << playerNum << "level-" << endl;
+	cout << "(a) BEST" << endl;
+	cout << "(b) GOOD" << endl;
+	cout << "(c) NOVICE" << endl;
+
+	char keyPressed = noKeyPressed;
+	keyPressed = _getch();
+	while (keyPressed == noKeyPressed && keyPressed != ComputerPlayer::eComputerLevel::BEST && keyPressed != ComputerPlayer::eComputerLevel::GOOD && keyPressed != ComputerPlayer::eComputerLevel::NOVICE)
+		keyPressed = _getch();
+
+	if (keyPressed == ComputerPlayer::eComputerLevel::BEST)
+		return ComputerPlayer::eComputerLevel::BEST;
+	if(keyPressed == ComputerPlayer::eComputerLevel::GOOD)
+		return ComputerPlayer::eComputerLevel::GOOD;
+	if (keyPressed == ComputerPlayer::eComputerLevel::NOVICE)
+		return ComputerPlayer::eComputerLevel::NOVICE;
 }

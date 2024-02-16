@@ -9,6 +9,7 @@ public:
 	enum { arrSIZE = 5 };
 	enum eRotation { CLOCKWISE = 0, COUNTERCLOCKWISE };
 	enum eSide { LEFT = -1, RIGHT = 1 };
+	enum eComputerLevel { BEST = 'a', GOOD = 'b', NOVICE = 'c' };
 
 
 private:
@@ -16,6 +17,8 @@ private:
 	int bestMove[4];
 	int score;
 	int noKeyPressed = 9;
+	char level;
+
 	void simulationMove();
 	int evaluateMove()const;
 	void copyArr(int from[arrSIZE], int moveScore);
@@ -38,8 +41,8 @@ public:
 
 	void copyShapeToBoard(Board& _board, Shape _shape);
 
-	//player ctor
-	ComputerPlayer(int i) : Player(i) { }
+	//ComputerPlayer ctor
+	ComputerPlayer(int i, char _level) : Player(i) { level = _level; }
 
 	void getRandShape(bool color) override
 	{
