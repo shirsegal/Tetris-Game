@@ -116,14 +116,17 @@ int Shape::getLeftmostEdge()
 
 void Shape::getRandShape(bool color)
 {
-	int sNum = rand() % 8 + 1; //without bomb 7
-	int colorNum = (int)eColors::BLACK;
+	//int sNum = rand() % 8 + 1; //without bomb 7
+	//int colorNum = (int)eColors::BLACK;
 
-	if (color)
-		colorNum = rand() % 5 + 1;
+	//if (color)
+	//	colorNum = rand() % 5 + 1;
 
-	setShape(sNum, colorNum);
-	shapeNum = sNum;
+	//setShape(sNum, colorNum);
+	//shapeNum = sNum;
+
+	setShape(8, 2);
+	shapeNum = 8;
 }
 
 //The function rotate the shape counter clockwise

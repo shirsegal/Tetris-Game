@@ -197,7 +197,7 @@ void Board::handleBombExploade()
 		for (int i = x + 5; i < GameConfig::GAME_WIDTH; i++)
 		{
 			for (int j = 0; j < GameConfig::GAME_HEIGHT; j++)
-			{
+			{ 
 				if (gameBoard[j][i] != ' ')
 				{
 					tempBoard[j][i] = gameBoard[j][i];

@@ -7,6 +7,7 @@ class TetrisGame
 	bool gameRunning;
 	void createNewPlayers(char p1, char p2, Player*& player1, Player*& player2);
 	char chooseComputerLevel(int playerNum);
+	enum eComputerLevel { BEST = 'a', GOOD = 'b', NOVICE = 'c' };
 
 public:
 	bool runGame();

@@ -8,8 +8,8 @@ class ComputerPlayer : public Player
 public:
 	enum { arrSIZE = 5 };
 	enum eRotation { CLOCKWISE = 0, COUNTERCLOCKWISE };
-	enum eSide { LEFT = -1, RIGHT = 1 };
-	enum eComputerLevel { BEST = 'a', GOOD = 'b', NOVICE = 'c' };
+	enum eSide { LEFT = 0, RIGHT = 1 };
+
 
 
 private:
@@ -33,8 +33,9 @@ private:
 	bool moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE]);
 	void keepRotating(int& i, int moveArr[arrSIZE], Shape& shape);
 	void moveShapeOneDown(Shape& shape);
-
 	bool moveShape(GameConfig::eKeys key) override;
+	bool canMoveLeftAndDown(Shape& shape, bool down) const;
+	bool canMoveRightAndDown(Shape& shape, bool down) const;
 
 public:
 	void generateMoves();

@@ -19,7 +19,7 @@ void Player::copyShapeToBoard()
 		int x = currBody.getX() - 1;
 		int y = currBody.getY() - 2;
 
-		int ch = shape.color;
+		int ch = shape.getColor();
 		myBoard.setBoardYX(y, x, ch);
 	}
 }

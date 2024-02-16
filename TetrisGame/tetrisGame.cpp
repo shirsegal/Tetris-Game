@@ -49,12 +49,12 @@ void TetrisGame::createNewPlayers(char p1, char p2, Player*& player1, Player*& p
 int TetrisGame::startNewGame(bool color, char p1, char p2)
 {
 	Board board;
-	board.drawBoards();
 
 	Player* player1 = nullptr;
 	Player* player2 = nullptr;
 
 	createNewPlayers(p1, p2, player1, player2);
+	board.drawBoards();
 
 	bool losePlayer1 = false;
 	bool losePlayer2 = false;
@@ -211,20 +211,19 @@ void TetrisGame::finishGame(int score1, int score2, bool losePlayer1, bool loseP
 
 char TetrisGame::chooseComputerLevel(int playerNum)
 {
-	cout << "Choose computer player " << playerNum << "level-" << endl;
+	cout << "Choose computer player" << playerNum << " level-" << endl;
 	cout << "(a) BEST" << endl;
 	cout << "(b) GOOD" << endl;
 	cout << "(c) NOVICE" << endl;
 
 	char keyPressed = noKeyPressed;
 	keyPressed = _getch();
-	while (keyPressed == noKeyPressed && keyPressed != ComputerPlayer::eComputerLevel::BEST && keyPressed != ComputerPlayer::eComputerLevel::GOOD && keyPressed != ComputerPlayer::eComputerLevel::NOVICE)
+	while (keyPressed == noKeyPressed && keyPressed != BEST && keyPressed != GOOD && keyPressed != NOVICE)
 		keyPressed = _getch();
 
-	if (keyPressed == ComputerPlayer::eComputerLevel::BEST)
-		return ComputerPlayer::eComputerLevel::BEST;
-	if(keyPressed == ComputerPlayer::eComputerLevel::GOOD)
-		return ComputerPlayer::eComputerLevel::GOOD;
-	if (keyPressed == ComputerPlayer::eComputerLevel::NOVICE)
-		return ComputerPlayer::eComputerLevel::NOVICE;
+	clrscr();
+
+	if (keyPressed == BEST) return BEST;
+	if (keyPressed == GOOD) return GOOD;
+	if (keyPressed == NOVICE) return NOVICE;
 }
