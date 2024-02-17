@@ -78,5 +78,10 @@ public:
 	{
 		return bomb;
 	}
+
+	void setBomb(int x, int y)
+	{
+		bomb.setXY(x, y);
+	}
 };
 

@@ -134,6 +134,8 @@ int ComputerPlayer::getTheHighestY(Shape& shape)
 int ComputerPlayer::evaluateMove(Shape shape)
 {
 	int shapeScore = 0;
+	moveShapeDown(shape);
+
 	if (shape.itsBomb())
 	{
 		Point bomb = shape.getBomb();
@@ -144,7 +146,6 @@ int ComputerPlayer::evaluateMove(Shape shape)
 	else
 	{
 		// Simulate the placement of the shape and evaluate the board state
-		moveShapeDown(shape);
 		Board simulatedBoard = myBoard;  // Create a copy of the current board state
 		copyShapeToBoard(simulatedBoard, shape);
 
@@ -333,8 +334,18 @@ void ComputerPlayer::keepRotating(int& i, int moveArr[arrSIZE], Shape& shape)
 void ComputerPlayer::moveShapeOneDown(Shape& shape)
 {
 	if (!shape.inBottom() && !shape.reachExistingShape())
-		for (int i = 0; i < Shape::SIZE; ++i)
-			shape.getBodyPoint(i).setPoint(shape.getBodyPoint(i).getX(), shape.getBodyPoint(i).getY() + 1);
+	{
+		if (shape.itsBomb())
+		{			
+			shape.setBomb(shape.getBomb().getX(), shape.getBomb().getY() + 1);
+		}
+		else
+		{
+			for (int i = 0; i < Shape::SIZE; ++i)
+				shape.getBodyPoint(i).setPoint(shape.getBodyPoint(i).getX(), shape.getBodyPoint(i).getY() + 1);
+		}
+	}
+		
 }
 
 
