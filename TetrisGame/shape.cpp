@@ -202,11 +202,8 @@ bool Shape::canRotate()
 		int y = p.getY() - (int)eDistance::FORy;
 
 		//gameBoard[y][x] != ' ' בורד קודם
-		if (myBoard.getBoardYX(y, x) != ' ' || x <= (int)eDistance::FORx ||
-			x >= GameConfig::GAME_WIDTH || y >= (GameConfig::GAME_HEIGHT + (int)eDistance::FORx))
-		{
+		if (myBoard.getBoardYX(y, x) != ' ' || x <= (int)eDistance::FORx || x >= GameConfig::GAME_WIDTH || y >= (GameConfig::GAME_HEIGHT + (int)eDistance::FORx))
 			return false;
-		}
 	}
 }
 

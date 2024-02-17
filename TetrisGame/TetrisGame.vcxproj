@@ -142,7 +142,6 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="computerPlayer.cpp" />
     <ClCompile Include="goToxy.cpp" />
-    <ClCompile Include="humanPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="player.cpp" />

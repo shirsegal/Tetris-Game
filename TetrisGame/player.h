@@ -11,7 +11,6 @@ class Player
 	int score;
 	int index;
 
-	
 	int getTheLowestY();
 	void copyNewBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH], int y);
 	void initBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH]);

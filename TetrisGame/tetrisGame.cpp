@@ -12,21 +12,74 @@
 
 using namespace std;
 
-//Open the Tetris game
-bool TetrisGame::runGame()
+void TetrisGame::deletePlayers()
 {
-	int res;
-	Menu menu;
-	res = menu.goToMenu(false);
+	if (player1 != nullptr) {
+		delete player1;
+		player1 = nullptr;
+	}
 
-	// Check if the game should continue based on the menu interaction
-	if (res == (int)Menu::eMenuKeys::EXIT)
-		return false;
-
-	return true;
+	if (player2 != nullptr) {
+		delete player2;
+		player2 = nullptr;
+	}
 }
 
-void TetrisGame::createNewPlayers(char p1, char p2, Player*& player1, Player*& player2)
+bool TetrisGame::checkIfPlayWithColor()
+{
+	cout << "Do you want to play with colors?" << endl;
+	cout << "(1) Yes" << endl;
+	cout << "(2) No" << endl;
+
+	char playerChoice = _getch();
+	while (playerChoice != '1' && playerChoice != '2')
+		playerChoice = _getch();
+
+	clrscr();
+	if (playerChoice == '1')return true;
+	else return false;
+}
+
+bool TetrisGame::runGame()
+{
+	Menu menu;
+	bool gamePaused = false;
+	int playerChoice = menu.goToMenu(gamePaused);
+
+	while (playerChoice != EXIT)
+	{
+		if (gameRunning)
+		{
+			deletePlayers();
+			changeGameStatus(false);
+		}
+
+		switch (playerChoice)
+		{
+		case (int)START_HvsH:
+			clrscr();
+			createNewPlayers('h', 'h');
+			playerChoice = startNewGame(checkIfPlayWithColor());//Start a game human VS human
+			break;
+		case (int)START_HvsC:
+			clrscr();
+			createNewPlayers('h', 'c');
+			playerChoice = startNewGame(checkIfPlayWithColor());//Start a game human VS computer
+			break;
+		case (int)START_CvsC:
+			clrscr();
+			createNewPlayers('c', 'c');
+			playerChoice = startNewGame(checkIfPlayWithColor());//Start a game computer VS computer
+			break;
+		case (int)INSTRUCTIONS:
+			playerChoice = menu.goToMenu(gamePaused);
+			break;
+		}
+	}
+	return 0;
+}
+
+void TetrisGame::createNewPlayers(char p1, char p2)
 {
 	int level;
 	if (p1 == 'h') {
@@ -45,15 +98,10 @@ void TetrisGame::createNewPlayers(char p1, char p2, Player*& player1, Player*& p
 	}
 }
 
-//Start a new Tetris game with 2 players
-int TetrisGame::startNewGame(bool color, char p1, char p2)
+int TetrisGame::startNewGame(bool color)
 {
 	Board board;
-
-	Player* player1 = nullptr;
-	Player* player2 = nullptr;
-
-	createNewPlayers(p1, p2, player1, player2);
+	changeGameStatus(true);
 	board.drawBoards();
 
 	bool losePlayer1 = false;
@@ -62,25 +110,22 @@ int TetrisGame::startNewGame(bool color, char p1, char p2)
 	player1->getRandShape(color);
 	player2->getRandShape(color);
 
-	//Continue the game untill we have a winner or someone stop the game
+	// Continue the game until we have a winner or someone stops the game
 	while (!losePlayer1 && !losePlayer2)
 	{
 		int res = moveShape(player1, player2, color);
-		if (res == Menu::eMenuKeys::EXIT)
+		if (res != 0)
 			return res;
 
 		losePlayer1 = player1->loseGame();
 		losePlayer2 = player2->loseGame();
 	}
 
-
 	// Determine the winner
 	if (losePlayer1 || losePlayer2)
 		finishGame(player1->getScore(), player2->getScore(), losePlayer1, losePlayer2);
-
 }
 
-//Give a shape for every player and move it down and with the player keys untill it touch the bottom
 int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 {
 	GameConfig ch;
@@ -97,8 +142,9 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 		if (keyPressed == 27)//Open the main menu
 		{
 			Menu menu;
+
 			int res = menu.goToMenu(true);
-			if (res == Menu::eMenuKeys::INSTRUCTIONS)
+			while (res == Menu::eMenuKeys::INSTRUCTIONS)
 				res = menu.goToMenu(true);
 
 			if (res == Menu::eMenuKeys::CONTINUE)//Continue the game from the same place
@@ -109,8 +155,7 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 				player1->drawNewBoard(player1Index);
 				player2->drawNewBoard(player2Index);
 			}
-			else if (res == Menu::eMenuKeys::EXIT)//Exit game
-				return res;
+			else return res;
 		}
 	}
 
@@ -138,33 +183,27 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 
 	//If the shape cant move copy to the player board and get a new shape
 	if (moveShape1 == false)
-	{
-		if (player1->isBomb())
-		{
-			player1->updateBoardAfterBomb(player1Index);
-		}
-		else
-		{
-			player1->copyShapeToBoard();
-			player1->checkIfThereIsFullLine(player1Index);
-		}
-		player1->getRandShape(color);
-	}
+		finishPlayerTurn(player1, player1Index, color);
 
 	if (moveShape2 == false)
-	{
-		if (player2->isBomb())
-		{
-			player2->updateBoardAfterBomb(player2Index);
-		}
-		else
-		{
-			player2->copyShapeToBoard();
-			player2->checkIfThereIsFullLine(player2Index);
-		}
-		player2->getRandShape(color);
-	}
+		finishPlayerTurn(player2, player2Index, color);
+
 	return 0;
+}
+
+//Copy the shape to player board and get a new shape
+void TetrisGame::finishPlayerTurn(Player* player, int index, bool color)
+{
+	if (player->isBomb())
+	{
+		player->updateBoardAfterBomb(index);
+	}
+	else
+	{
+		player->copyShapeToBoard();
+		player->checkIfThereIsFullLine(index);
+	}
+	player->getRandShape(color);
 }
 
 //Show the winner and players scores
@@ -204,13 +243,13 @@ void TetrisGame::finishGame(int score1, int score2, bool losePlayer1, bool loseP
 	while (keyPressed == noKeyPressed)
 		keyPressed = _getch();
 
-	Menu menu;
-	menu.goToMenu(false);
+	deletePlayers();
+	changeGameStatus(false);
 }
 
 char TetrisGame::chooseComputerLevel(int playerNum)
 {
-	cout << "Choose computer player" << playerNum << " level-" << endl;
+	cout << "Choose computer player " << playerNum << " level-" << endl;
 	cout << "(a) BEST" << endl;
 	cout << "(b) GOOD" << endl;
 	cout << "(c) NOVICE" << endl;

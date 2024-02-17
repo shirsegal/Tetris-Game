@@ -333,7 +333,7 @@ void ComputerPlayer::moveShapeOneDown(Shape& shape)
 	if (!shape.inBottom() && !shape.reachExistingShape())
 	{
 		if (shape.itsBomb())
-		{			
+		{
 			shape.setBomb(shape.getBomb().getX(), shape.getBomb().getY() + 1);
 		}
 		else
@@ -342,7 +342,7 @@ void ComputerPlayer::moveShapeOneDown(Shape& shape)
 				shape.getBodyPoint(i).setPoint(shape.getBodyPoint(i).getX(), shape.getBodyPoint(i).getY() + 1);
 		}
 	}
-		
+
 }
 
 
@@ -367,7 +367,7 @@ void ComputerPlayer::copyShapeToBoard(Board& _board, Shape _shape)
 bool ComputerPlayer::moveShape(GameConfig::eKeys key)
 {
 	int k = noKeyPressed;
-	bool res = true;
+	bool res = true, rotate = false;
 
 	if (bestMove[1] != 0)
 	{
@@ -380,10 +380,19 @@ bool ComputerPlayer::moveShape(GameConfig::eKeys key)
 	else if (bestMove[3] != 0)
 	{
 		if (bestMove[4] == 0)
+		{
+			if (bestMove[3] == 3)//Check if there are 3 ROTATE_CLOCKWISE and try to do 1 ROTATE_COUNTER_CLOCKWISE
+			{
+				rotate = shape.rotateCounterClockwise(getIndex());
+				if (rotate)
+					bestMove[3] = 0;
+			}
 			k = (int)GameConfig::eKeys::ROTATE_CLOCKWISE;
+		}
 		else
 			k = (int)GameConfig::eKeys::ROTATE_COUNTER_CLOCKWISE;
-		bestMove[3] -= 1;
+		if (rotate) k = noKeyPressed;
+		else bestMove[3] -= 1;
 	}
 	else if (bestMove[2] != 0)
 	{
