@@ -171,6 +171,46 @@ int Board::calculateBoardSurface() const
 	return roughness;
 }
 
+
+//void Board::handleBombExploade()
+//{
+//	int x = bomb.getX() - 1;
+//	int y = bomb.getY() - 2;
+//	int tempBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
+//	initBoard(tempBoard);
+//
+//	// Copy the 9x9 grid around the explosion point to the temporary board
+//	for (int i = checkMax(0, x - 4); i < checkMin(GameConfig::GAME_WIDTH, x + 5); i++)
+//	{
+//		for (int j = checkMax(0, y - 4); j < checkMin(GameConfig::GAME_HEIGHT, y + 5); j++)
+//		{
+//			tempBoard[j][i] = gameBoard[j][i];
+//		}
+//	}
+//
+//	// Copy the temporary board back to the main board
+//	copyNewBoard(tempBoard, GameConfig::GAME_HEIGHT + 1);
+//
+//	// Check for full lines and handle them if necessary
+//	checkIfThereIsFullLine(0);
+//}
+
+int Board::checkMin(int a, int b) const
+{
+	if (a < b)
+		return a;
+	else
+		return b;
+}
+
+int Board::checkMax(int a, int b) const
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+
 void Board::handleBombExploade()
 {
 	int x = bomb.getX() - 1;
@@ -178,44 +218,42 @@ void Board::handleBombExploade()
 	int tempBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
 	initBoard(tempBoard);
 
-	if ((x - 4) > 0)
+	for (int i = 0; i < checkMax((x - 4), 0); i++)
 	{
-		for (int i = 0; i < (x - 4); i++)
+		for (int j = 0; j < (int)GameConfig::GAME_HEIGHT; j++)
 		{
-			for (int j = 0; j < GameConfig::GAME_HEIGHT; j++)
+			if (gameBoard[j][i] != ' ')
 			{
-				if (gameBoard[j][i] != ' ')
-				{
-					tempBoard[j][i] = gameBoard[j][i];
-				}
+				tempBoard[j][i] = gameBoard[j][i];
 			}
 		}
 	}
 
-	if ((x + 4) < (GameConfig::GAME_WIDTH - 1))
+	for (int i = checkMin(x + 5, GameConfig::GAME_WIDTH); i < (int)GameConfig::GAME_WIDTH; i++)
 	{
-		for (int i = x + 5; i < GameConfig::GAME_WIDTH; i++)
+		/*for (int j = 0; j < (int)GameConfig::GAME_HEIGHT; j++)
 		{
-			for (int j = 0; j < GameConfig::GAME_HEIGHT; j++)
-			{ 
-				if (gameBoard[j][i] != ' ')
-				{
-					tempBoard[j][i] = gameBoard[j][i];
-				}
+			if (gameBoard[j][i] != ' ')
+			{
+				tempBoard[j][i] = gameBoard[j][i];
 			}
-		}
+		}*/
 	}
+
 
 	int count = 0;
-	for (int j = 0; j < y - 4; j++)
-	{	
-		for (int i = x - 4; i < (x + 4 & GameConfig::GAME_WIDTH); i++)
+	for (int j = checkMax(-1, y - 5); j >= 0; j--)
+	{
+		for (int i = checkMax(0, x - 4); i < checkMin(x + 4, GameConfig::GAME_WIDTH); i++)
 		{
-			tempBoard[(y + 4) + count][i] = gameBoard[j][i];
+			if (gameBoard[j][i] != ' ')
+			{
+				tempBoard[count][i] = gameBoard[j][i];
+			}
 		}
 		count++;
 	}
 
-	copyNewBoard(tempBoard, (GameConfig::GAME_HEIGHT + 1));
+	copyNewBoard(tempBoard, ((int)GameConfig::GAME_HEIGHT + 1));
 	checkIfThereIsFullLine(0);
 }

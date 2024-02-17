@@ -120,19 +120,20 @@ void Shape::getRandShape(bool color)
 	if (color)
 		colorNum = rand() % 5 + 1;
 
-	int r = rand() % 20; //Every ~5% of the shapes we get bomb
-	if (r == 0)
-	{
-		setShape((int)Bomb, colorNum);
-		isBomb = true;
-		shapeNum = (int)Bomb;
-	}
-	else
-	{
-		int sNum = rand() % 7 + 1;
-		setShape(sNum, colorNum);
-		shapeNum = sNum;
-	}
+	shapeNum = 8;
+	setShape((int)Bomb, colorNum);
+	//int r = rand() % 20; //Every ~5% of the shapes we get bomb
+	//if (r == 0)
+	//{
+	//	setShape((int)Bomb, colorNum);
+	//	shapeNum = (int)Bomb;
+	//}
+	//else
+	//{
+	//	int sNum = rand() % 7 + 1;
+	//	setShape(sNum, colorNum);
+	//	shapeNum = sNum;
+	//}
 }
 
 //The function rotate the shape counter clockwise

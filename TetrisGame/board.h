@@ -9,6 +9,8 @@ class Board
 	int gameBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
 	void initBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH]);
 	void copyNewBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH], int y);
+	int checkMin(int a, int b) const;
+	int checkMax(int a, int b) const;
 
 
 public:
