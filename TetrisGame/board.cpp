@@ -241,7 +241,7 @@ void Board::handleBombExploade()
 	}
 
 
-	int count = 0;
+	int count = checkMin(y + 4, GameConfig::GAME_HEIGHT - 1);
 	for (int j = checkMax(-1, y - 5); j >= 0; j--)
 	{
 		for (int i = checkMax(0, x - 4); i < checkMin(x + 4, GameConfig::GAME_WIDTH); i++)

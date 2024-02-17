@@ -128,54 +128,93 @@ int ComputerPlayer::getTheHighestY(Shape& shape)
 	return theHighest;
 }
 
+
+
+
 int ComputerPlayer::evaluateMove(Shape shape)
 {
-	// Simulate the placement of the shape and evaluate the board state
-	moveShapeDown(shape);
-	Board simulatedBoard = myBoard;  // Create a copy of the current board state
-	copyShapeToBoard(simulatedBoard, shape);
 	int shapeScore = 0;
-
-	int numOfRows = getTheLowestY(shape);
-	int theHighestY = getTheHighestY(shape);
-
-	// 1. Height of the Placement
-	shapeScore -= (GameConfig::GAME_HEIGHT - numOfRows);
-
-	// 2. Number of Lines Cleared
-	int linesCleared = simulatedBoard.checkIfThereIsFullLine(numOfRows); //בודקת שורות ריקות
-	shapeScore += linesCleared * 100000;
-
-	// 3. Number of Holes Created
-	int holesCreated = 0;
-	int _x, y;
-	for (size_t i = 0; i < Shape::SIZE; i++)
+	if (shape.itsBomb())
 	{
-		_x = (shape.getBodyPoint(i)).getX() - 1;
-		y = (shape.getBodyPoint(i)).getY() - 2;
-		holesCreated += simulatedBoard.countHoles(y, _x); //בודקת חורים
+		Point bomb = shape.getBomb();
+		int x = bomb.getX() - 1;
+		int y = bomb.getY() - 2;
+		shapeScore = evaluateBombScore(x, y);
 	}
-	shapeScore -= holesCreated * 50;
+	else
+	{
+		// Simulate the placement of the shape and evaluate the board state
+		moveShapeDown(shape);
+		Board simulatedBoard = myBoard;  // Create a copy of the current board state
+		copyShapeToBoard(simulatedBoard, shape);
 
-	// 4. Smoothness of the Surface
-	int surfaceRoughness = simulatedBoard.calculateBoardSurface(); //בודקת כמה חלק השטח - הפרשי גבהים
-	shapeScore -= surfaceRoughness * 3;
 
-	// 5. Proximity to Edges
-	int x = shape.getLeftmostEdge();
-	int distanceToEdges = getMin(x, (GameConfig::GAME_WIDTH - x - 1)); //עדיף שלא יהיה קרוב לקצוות
-	shapeScore += distanceToEdges * 2;
+		int numOfRows = getTheLowestY(shape);
+		int theHighestY = getTheHighestY(shape);
 
+		// 1. Height of the Placement
+		shapeScore -= (GameConfig::GAME_HEIGHT - numOfRows);
+
+		// 2. Number of Lines Cleared
+		int linesCleared = simulatedBoard.checkIfThereIsFullLine(numOfRows); //בודקת שורות ריקות
+		shapeScore += linesCleared * 100000;
+
+		// 3. Number of Holes Created
+		int holesCreated = 0;
+		int _x, y;
+		for (size_t i = 0; i < Shape::SIZE; i++)
+		{
+			_x = (shape.getBodyPoint(i)).getX() - 1;
+			y = (shape.getBodyPoint(i)).getY() - 2;
+			holesCreated += simulatedBoard.countHoles(y, _x); //בודקת חורים
+		}
+		shapeScore -= holesCreated * 50;
+
+		// 4. Smoothness of the Surface
+		int surfaceRoughness = simulatedBoard.calculateBoardSurface(); //בודקת כמה חלק השטח - הפרשי גבהים
+		shapeScore -= surfaceRoughness * 3;
+
+		// 5. Proximity to Edges
+		int x = shape.getLeftmostEdge();
+		int distanceToEdges = getMin(x, (GameConfig::GAME_WIDTH - x - 1)); //עדיף שלא יהיה קרוב לקצוות
+		shapeScore += distanceToEdges * 2;
+
+	}
 	return shapeScore;
 }
 
-int ComputerPlayer::getMin(int& a, int b) const
+int ComputerPlayer::evaluateBombScore(int x, int y)
+{
+	int bombScore = 0;
+
+	for (int j = getMin(GameConfig::GAME_HEIGHT - 1, y + 4); j >= checkMax(0, y - 4); j--)
+	{
+		for (int i = checkMax(0, x - 4); i < getMin(GameConfig::GAME_WIDTH, x + 5); i++)
+		{
+			if (myBoard.getBoardYX(j, i) != ' ')
+			{
+				bombScore++;
+			}
+		}
+	}
+	return bombScore;
+}
+
+int ComputerPlayer::getMin(int a, int b) const
 {
 	if (a < b)
 	{
 		return a;
 	}
 	return b;
+}
+
+int ComputerPlayer::checkMax(int a, int b) const
+{
+	if (a > b)
+		return a;
+	else
+		return b;
 }
 
 void ComputerPlayer::copyArr(int from[arrSIZE], int moveScore)

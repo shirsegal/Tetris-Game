@@ -289,14 +289,13 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 
 		if (isBomb)
 		{
-			bomb.move(key, onSideLeft, onSideRight, canLeft, canRight);
+			if ((int)key != noKeyPressed)
+				bomb.move(key, onSideLeft, onSideRight, canLeft, canRight);
 		}
 		else
 		{
 			for (int i = 0; i < SIZE; i++)
-			{
 				body[i].move(key, onSideLeft, onSideRight, canLeft, canRight);
-			}
 		}
 		return true;
 	}

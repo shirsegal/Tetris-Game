@@ -15,6 +15,7 @@ private:
 	Board& myBoard;
 	Point bomb;
 	bool isBomb = false;
+	int noKeyPressed = 9;
 	enum class eDistance { FORx = 1, FORy = 2 };
 	enum ePlaces { FIRST = 0, SECOND, THIRD, FOURTH };
 	enum class eColors { BLACK, RED, BLUE, GREEN, PURPLE, YELLOW };

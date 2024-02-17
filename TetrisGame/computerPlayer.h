@@ -27,7 +27,7 @@ private:
 	void resetArr(int arr[arrSIZE]);
 	int getTheLowestY(Shape& shape);
 	int getTheHighestY(Shape& shape);
-	int getMin(int& a, int b) const;
+	int getMin(int a, int b) const;
 	bool checkAndRotate(bool& counterClock, int rotation, Shape& shape, int moveArr[arrSIZE]);
 	bool moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE], bool chooseRand);
 	void keepRotating(int& i, int moveArr[arrSIZE], Shape& shape);
@@ -36,6 +36,8 @@ private:
 	bool canMoveLeftAndDown(Shape& shape, bool down) const;
 	bool canMoveRightAndDown(Shape& shape, bool down) const;
 	void bringShapeToStartPosition(Shape& temp, Shape& shape);
+	int evaluateBombScore(int x, int y);
+	int checkMax(int a, int b) const;
 
 public:
 	void generateMoves();
