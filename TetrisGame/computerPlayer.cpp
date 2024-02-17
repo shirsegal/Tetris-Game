@@ -128,9 +128,6 @@ int ComputerPlayer::getTheHighestY(Shape& shape)
 	return theHighest;
 }
 
-
-
-
 int ComputerPlayer::evaluateMove(Shape shape)
 {
 	int shapeScore = 0;

@@ -289,7 +289,7 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 
 		if (isBomb)
 		{
-			if ((int)key != noKeyPressed)
+			if (((int)key != (int)GameConfig::eKeys::ROTATE_COUNTER_CLOCKWISE) && ((int)key != (int)GameConfig::eKeys::ROTATE_CLOCKWISE))
 				bomb.move(key, onSideLeft, onSideRight, canLeft, canRight);
 		}
 		else
