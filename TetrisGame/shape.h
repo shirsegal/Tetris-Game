@@ -32,14 +32,14 @@ public:
 	void getRandShape(bool color);
 	void dupShape(Point from[SIZE], Point to[SIZE]);
 	void drawShape(int playerIndex, char ch = '#');
-	bool move(GameConfig::eKeys key, int playerIndex); //
+	bool move(GameConfig::eKeys key, int playerIndex);
 	void setShape(int shapeNum, int shapeColor);
-	bool rotateClockwise(int playerIndex); //
-	bool canRotate(); //
-	bool rotateCounterClockwise(int playerIndex); //
-	bool canMoveRight(); //
-	bool canMoveLeft(); //
-	bool reachExistingShape(); //
+	bool rotateClockwise(int playerIndex);
+	bool canRotate();
+	bool rotateCounterClockwise(int playerIndex);
+	bool canMoveRight(); 
+	bool canMoveLeft(); 
+	bool reachExistingShape(); 
 	bool inBottom();
 	int getLeftmostEdge();
 
@@ -52,7 +52,6 @@ public:
 	{
 		direction = (int)_direction;
 	}
-
 
 	Point& getBodyPoint(int i)
 	{
