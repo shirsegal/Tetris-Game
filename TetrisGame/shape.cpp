@@ -32,64 +32,64 @@ void Shape::setShape(int shapeNum, int shapeColor)
 
 	switch (shapeNum)
 	{
-	case (int)eShapes::columShape:
+	case (int)columShape:
 	{
-		body[(int)ePlaces::FIRST].setXY(6, 2);
-		body[(int)ePlaces::SECOND].setXY(6, 3);
-		body[(int)ePlaces::THIRD].setXY(6, 4);
-		body[(int)ePlaces::FOURTH].setXY(6, 5);
+		body[(int)FIRST].setXY(6, 2);
+		body[(int)SECOND].setXY(6, 3);
+		body[(int)THIRD].setXY(6, 4);
+		body[(int)FOURTH].setXY(6, 5);
 	}
 	break;
-	case (int)eShapes::LLeftShape:
+	case (int)LLeftShape:
 	{
-		body[(int)ePlaces::FIRST].setXY(7, 2);
-		body[(int)ePlaces::SECOND].setXY(7, 3);
-		body[(int)ePlaces::THIRD].setXY(7, 4);
-		body[(int)ePlaces::FOURTH].setXY(8, 4);
+		body[(int)FIRST].setXY(7, 2);
+		body[(int)SECOND].setXY(7, 3);
+		body[(int)THIRD].setXY(7, 4);
+		body[(int)FOURTH].setXY(8, 4);
 	}
 	break;
-	case (int)eShapes::LRightShape:
+	case (int)LRightShape:
 	{
-		body[(int)ePlaces::FIRST].setXY(7, 2);
-		body[(int)ePlaces::SECOND].setXY(7, 3);
-		body[(int)ePlaces::THIRD].setXY(7, 4);
-		body[(int)ePlaces::FOURTH].setXY(6, 4);
+		body[(int)FIRST].setXY(7, 2);
+		body[(int)SECOND].setXY(7, 3);
+		body[(int)THIRD].setXY(7, 4);
+		body[(int)FOURTH].setXY(6, 4);
 	}
 	break;
-	case (int)eShapes::squereShape:
+	case (int)squereShape:
 	{
-		body[(int)ePlaces::FIRST].setXY(6, 2);
-		body[(int)ePlaces::SECOND].setXY(7, 2);
-		body[(int)ePlaces::THIRD].setXY(6, 3);
-		body[(int)ePlaces::FOURTH].setXY(7, 3);
+		body[(int)FIRST].setXY(6, 2);
+		body[(int)SECOND].setXY(7, 2);
+		body[(int)THIRD].setXY(6, 3);
+		body[(int)FOURTH].setXY(7, 3);
 	}
 	break;
-	case (int)eShapes::TShape:
+	case (int)TShape:
 	{
 		setDirection(eDirection::VERTICAL);
-		body[(int)ePlaces::FIRST].setXY(5, 2);
-		body[(int)ePlaces::SECOND].setXY(6, 2);
-		body[(int)ePlaces::THIRD].setXY(7, 2);
-		body[(int)ePlaces::FOURTH].setXY(6, 3);
+		body[(int)FIRST].setXY(5, 2);
+		body[(int)SECOND].setXY(6, 2);
+		body[(int)THIRD].setXY(7, 2);
+		body[(int)FOURTH].setXY(6, 3);
 	}
 	break;
-	case (int)eShapes::ZLeftfShape:
+	case (int)ZLeftfShape:
 	{
-		body[(int)ePlaces::FIRST].setXY(6, 2);
-		body[(int)ePlaces::SECOND].setXY(7, 2);
-		body[(int)ePlaces::THIRD].setXY(7, 3);
-		body[(int)ePlaces::FOURTH].setXY(8, 3);
+		body[(int)FIRST].setXY(6, 2);
+		body[(int)SECOND].setXY(7, 2);
+		body[(int)THIRD].setXY(7, 3);
+		body[(int)FOURTH].setXY(8, 3);
 	}
 	break;
-	case (int)eShapes::ZRightfShape:
+	case (int)ZRightfShape:
 	{
-		body[(int)ePlaces::FIRST].setXY(7, 2);
-		body[(int)ePlaces::SECOND].setXY(8, 2);
-		body[(int)ePlaces::THIRD].setXY(7, 3);
-		body[(int)ePlaces::FOURTH].setXY(6, 3);
+		body[(int)FIRST].setXY(7, 2);
+		body[(int)SECOND].setXY(8, 2);
+		body[(int)THIRD].setXY(7, 3);
+		body[(int)FOURTH].setXY(6, 3);
 	}
 	break;
-	case (int)eShapes::bomb:
+	case (int)Bomb:
 	{
 		isBomb = true;
 		bomb.setPoint(6, 2, '@');
@@ -116,17 +116,23 @@ int Shape::getLeftmostEdge()
 
 void Shape::getRandShape(bool color)
 {
-	//int sNum = rand() % 8 + 1; //without bomb 7
-	//int colorNum = (int)eColors::BLACK;
+	int colorNum = (int)eColors::BLACK;
+	if (color)
+		colorNum = rand() % 5 + 1;
 
-	//if (color)
-	//	colorNum = rand() % 5 + 1;
-
-	//setShape(sNum, colorNum);
-	//shapeNum = sNum;
-
-	setShape(8, 2);
-	shapeNum = 8;
+	int r = rand() % 20; //Every ~5% of the shapes we get bomb
+	if (r == 0)
+	{
+		setShape((int)Bomb, colorNum);
+		isBomb = true;
+		shapeNum = (int)Bomb;
+	}
+	else
+	{
+		int sNum = rand() % 7 + 1;
+		setShape(sNum, colorNum);
+		shapeNum = sNum;
+	}
 }
 
 //The function rotate the shape counter clockwise

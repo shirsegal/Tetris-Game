@@ -56,7 +56,7 @@ public:
 
 	bool isBomb()
 	{
-		return shape.getIsBomb();
+		return shape.itsBomb();
 	}
 
 	virtual bool moveShape(GameConfig::eKeys key) = 0;

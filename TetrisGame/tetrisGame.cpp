@@ -218,12 +218,12 @@ char TetrisGame::chooseComputerLevel(int playerNum)
 
 	char keyPressed = noKeyPressed;
 	keyPressed = _getch();
-	while (keyPressed == noKeyPressed && keyPressed != BEST && keyPressed != GOOD && keyPressed != NOVICE)
+	while (keyPressed == noKeyPressed && keyPressed != ComputerPlayer::eLevel::BEST && keyPressed != ComputerPlayer::eLevel::GOOD && keyPressed != ComputerPlayer::eLevel::NOVICE)
 		keyPressed = _getch();
 
 	clrscr();
 
-	if (keyPressed == BEST) return BEST;
-	if (keyPressed == GOOD) return GOOD;
-	if (keyPressed == NOVICE) return NOVICE;
+	if (keyPressed == ComputerPlayer::eLevel::BEST) return ComputerPlayer::eLevel::BEST;
+	if (keyPressed == ComputerPlayer::eLevel::GOOD) return ComputerPlayer::eLevel::GOOD;
+	if (keyPressed == ComputerPlayer::eLevel::NOVICE) return ComputerPlayer::eLevel::NOVICE;
 }

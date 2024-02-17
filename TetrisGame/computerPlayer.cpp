@@ -3,18 +3,27 @@
 
 void ComputerPlayer::generateMoves()
 {
-	Shape temp = shape;
+	int moveScore, randMoveNum, shapeNum = shape.getShapeNum(), counter = 0;
 	bestMoveScore = -2000;
-	int moveScore, shapeNum = shape.getShapeNum();
 	bool canMove, rotate = false, counterClock = false, res, down = true;
 	int moveArr[arrSIZE] = { 0 };
+	bool chooseThisMove = false, makeRandMove = false;
 	//moveArr[0] => 0 = left, 1 = right; 
 	//moveArr[1] => move before rotate; 
 	//moveArr[2] => move after rotate; 
 	//moveArr[3] => num of rotations; 
 	//moveArr[4] => clockWise = 0, counterClockwise = 1;
 
-//Check all the possible moves going left
+	//Check if take a random move 
+	if ((level == GOOD && (rand() % 20) == 0) || (level == NOVICE && (rand() % 10) == 0))
+	{
+		if (shapeNum == (int)Shape::eShapes::squereShape || shapeNum == (int)Shape::eShapes::Bomb)
+			randMoveNum = rand() % (GameConfig::GAME_WIDTH - 1); //The num of moves for squere and bomb is ~12
+		else randMoveNum = rand() % 47; //The num of option to move for every shape is ~48
+		makeRandMove = true;
+	}
+
+	Shape temp = shape;
 	for (int rotation = 0; rotation < 4; ++rotation) { // Try all 4 rotations
 
 		for (int side = 0; side < 2; ++side)
@@ -34,7 +43,10 @@ void ComputerPlayer::generateMoves()
 			//check all the possible positions the left side of the board
 			while ((side == LEFT && canMoveLeftAndDown(temp, down)) || (side == RIGHT && canMoveRightAndDown(temp, down)))
 			{
-				down = moveAndEvaluateShapeSimulator(temp, side, rotate, moveArr);
+				if (makeRandMove && (++counter == randMoveNum))
+					chooseThisMove = true;
+
+				down = moveAndEvaluateShapeSimulator(temp, side, rotate, moveArr, chooseThisMove);
 				if (rotate)
 				{
 					res = checkAndRotate(counterClock, rotation, temp, moveArr);
@@ -43,27 +55,48 @@ void ComputerPlayer::generateMoves()
 					if (moveArr[3] == rotation)
 						rotate = false;
 				}
+				if (chooseThisMove)
+				{
+					side = 2;
+					break; //choose random the last move, stop the while
+				}
 			}
 
 			//Bring the shape to the start possition and check the right side
-			for (int i = 0; i < Shape::SIZE; i++)
-				temp.getBodyPoint(i).setPoint(shape.getBodyPoint(i).getX(), shape.getBodyPoint(i).getY());
+			bringShapeToStartPosition(temp, shape);
 			if (rotation != 0)rotate = true;
 			resetArr(moveArr);
 		}
 		rotate = true;
-		if (shapeNum == (int)Shape::eShapes::bomb || shapeNum == (int)Shape::eShapes::squereShape)rotation = 3;//The bomb and squere cant rotate
+		if (shapeNum == (int)Shape::eShapes::squereShape || shapeNum == (int)Shape::eShapes::Bomb || chooseThisMove)rotation = 3;//The squere and bomb cant rotate so dont continue the for
 	}
 }
 
-bool ComputerPlayer::canMoveLeftAndDown(Shape& shape, bool down) const
+//Copy the start position of shape to temp
+void ComputerPlayer::bringShapeToStartPosition(Shape& temp, Shape& shape)
 {
-	return shape.getBodyPoint(0).getX() > 1 && shape.getBodyPoint(1).getX() > 1 && shape.getBodyPoint(2).getX() > 1 && shape.getBodyPoint(3).getX() > 1 && shape.canMoveLeft() && down;
+	if (shape.itsBomb())
+	{
+		for (int i = 0; i < Shape::SIZE; i++)
+			temp.getBodyPoint(i).setPoint(shape.getBodyPoint(i).getX(), shape.getBodyPoint(i).getY());
+	}
+	else temp.getBomb().setPoint(shape.getBomb().getX(), shape.getBomb().getY());
 }
 
+//Check if the shapr can move left and down
+bool ComputerPlayer::canMoveLeftAndDown(Shape& shape, bool down) const
+{
+	if (shape.itsBomb())
+		return shape.getBomb().getX() > 1 && down;
+	else return shape.getBodyPoint(0).getX() > 1 && shape.getBodyPoint(1).getX() > 1 && shape.getBodyPoint(2).getX() > 1 && shape.getBodyPoint(3).getX() > 1 && shape.canMoveLeft() && down;
+}
+
+//Check if the shapr can move right and down
 bool ComputerPlayer::canMoveRightAndDown(Shape& shape, bool down) const
 {
-	return shape.getBodyPoint(0).getX() < GameConfig::GAME_WIDTH && shape.getBodyPoint(1).getX() < GameConfig::GAME_WIDTH && shape.getBodyPoint(2).getX() < GameConfig::GAME_WIDTH && shape.getBodyPoint(3).getX() < GameConfig::GAME_WIDTH && shape.canMoveRight() && down;
+	if (shape.itsBomb())
+		return shape.getBomb().getX() < GameConfig::GAME_WIDTH && down;
+	else return shape.getBodyPoint(0).getX() < GameConfig::GAME_WIDTH && shape.getBodyPoint(1).getX() < GameConfig::GAME_WIDTH && shape.getBodyPoint(2).getX() < GameConfig::GAME_WIDTH && shape.getBodyPoint(3).getX() < GameConfig::GAME_WIDTH && shape.canMoveRight() && down;
 }
 
 //The function get the lowest Y of the shape
@@ -193,9 +226,9 @@ bool ComputerPlayer::checkAndRotate(bool& counterClock, int rotation, Shape& sha
 }
 
 //Move the simulator shape left/right
-bool ComputerPlayer::moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE])
+bool ComputerPlayer::moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE], bool chooseRand)
 {
-	int moveScore, x;
+	int moveScore, x, newX, newY;
 	bool canMove;
 
 	if (side == LEFT)
@@ -210,18 +243,28 @@ bool ComputerPlayer::moveAndEvaluateShapeSimulator(Shape& temp, int side, bool r
 	}
 	if (canMove)
 	{
-		for (int i = 0; i < Shape::SIZE; i++)//Move shpe left and down 
+		if (temp.itsBomb())
 		{
-			int newX = temp.getBodyPoint(i).getX() + x;
-			int newY = temp.getBodyPoint(i).getY() + 1;
-			Point& p = temp.getBodyPoint(i);
-			p.setXY(newX, newY);
+			Point& pBomb = temp.getBomb();
+			newX = pBomb.getX() + x;
+			newY = pBomb.getY() + 1;
+			pBomb.setXY(newX, newY);
+		}
+		else
+		{
+			for (int i = 0; i < Shape::SIZE; i++)//Move shpe left and down 
+			{
+				newX = temp.getBodyPoint(i).getX() + x;
+				newY = temp.getBodyPoint(i).getY() + 1;
+				Point& p = temp.getBodyPoint(i);
+				p.setXY(newX, newY);
+			}
 		}
 		updateMoveArr(moveArr);
-		if (!rotate)//!rotate && rotation != 0 היה ככה לפני לראות אחר כך אם באמת צריך
+		if (!rotate)
 		{
 			moveScore = evaluateMove(temp);
-			if (moveScore > bestMoveScore)
+			if (moveScore > bestMoveScore || chooseRand)
 				copyArr(moveArr, moveScore);
 		}
 		return true;

@@ -7,7 +7,7 @@ class Shape
 {
 public:
 	enum { SIZE = 4 };
-	enum class eShapes { squereShape = 1, LRightShape, LLeftShape, TShape, ZLeftfShape, ZRightfShape, columShape, bomb };
+	enum eShapes { squereShape = 1, LRightShape, LLeftShape, TShape, ZLeftfShape, ZRightfShape, columShape, Bomb };
 
 private:
 	enum startVal { X = 6, Y = 2 };
@@ -16,16 +16,16 @@ private:
 	Point bomb;
 	bool isBomb = false;
 	enum class eDistance { FORx = 1, FORy = 2 };
-	enum class ePlaces { FIRST = 0, SECOND, THIRD, FOURTH };
+	enum ePlaces { FIRST = 0, SECOND, THIRD, FOURTH };
 	enum class eColors { BLACK, RED, BLUE, GREEN, PURPLE, YELLOW };
 	enum class eDirection { HORIZON = 1, VERTICAL, UPSIDE_DOWN, UPSIDE_LEFT };
 	int direction;
-	void dropShape(); //
+	void dropShape();
 	bool isOnSideLeft();
 	bool isOnSideRight();
 	int color;
 	int shapeNum;
-	
+
 public:
 	Shape(Board& board) : myBoard(board) {};
 	void getRandShape(bool color);
@@ -39,7 +39,7 @@ public:
 	bool canMoveRight(); //
 	bool canMoveLeft(); //
 	bool reachExistingShape(); //
-	bool inBottom(); 
+	bool inBottom();
 	int getLeftmostEdge();
 
 	int getDirection()
@@ -57,8 +57,8 @@ public:
 	{
 		return body[i];
 	}
-	
-	bool getIsBomb() const
+
+	bool itsBomb() const
 	{
 		return isBomb;
 	}
@@ -71,6 +71,11 @@ public:
 	int getShapeNum()const
 	{
 		return shapeNum;
+	}
+
+	Point& getBomb()
+	{
+		return bomb;
 	}
 };
 

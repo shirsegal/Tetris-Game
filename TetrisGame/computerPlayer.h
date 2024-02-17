@@ -9,8 +9,7 @@ public:
 	enum { arrSIZE = 5 };
 	enum eRotation { CLOCKWISE = 0, COUNTERCLOCKWISE };
 	enum eSide { LEFT = 0, RIGHT = 1 };
-
-
+	enum eLevel { BEST = 'a', GOOD = 'b', NOVICE = 'c' };
 
 private:
 	int bestMoveScore;
@@ -30,12 +29,13 @@ private:
 	int getTheHighestY(Shape& shape);
 	int getMin(int& a, int b) const;
 	bool checkAndRotate(bool& counterClock, int rotation, Shape& shape, int moveArr[arrSIZE]);
-	bool moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE]);
+	bool moveAndEvaluateShapeSimulator(Shape& temp, int side, bool rotate, int moveArr[arrSIZE], bool chooseRand);
 	void keepRotating(int& i, int moveArr[arrSIZE], Shape& shape);
 	void moveShapeOneDown(Shape& shape);
 	bool moveShape(GameConfig::eKeys key) override;
 	bool canMoveLeftAndDown(Shape& shape, bool down) const;
 	bool canMoveRightAndDown(Shape& shape, bool down) const;
+	void bringShapeToStartPosition(Shape& temp, Shape& shape);
 
 public:
 	void generateMoves();
