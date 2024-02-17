@@ -161,7 +161,6 @@ int TetrisGame::moveShape(Player* player1, Player* player2, bool color)
 		{
 			player2->copyShapeToBoard();
 			player2->checkIfThereIsFullLine(player2Index);
-
 		}
 		player2->getRandShape(color);
 	}

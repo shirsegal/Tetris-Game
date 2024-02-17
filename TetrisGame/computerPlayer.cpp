@@ -43,7 +43,8 @@ void ComputerPlayer::generateMoves()
 			//check all the possible positions the left side of the board
 			while ((side == LEFT && canMoveLeftAndDown(temp, down)) || (side == RIGHT && canMoveRightAndDown(temp, down)))
 			{
-				if (makeRandMove && (++counter == randMoveNum))
+				counter++;
+				if (makeRandMove && (counter == randMoveNum))
 					chooseThisMove = true;
 
 				down = moveAndEvaluateShapeSimulator(temp, side, rotate, moveArr, chooseThisMove);
@@ -75,7 +76,7 @@ void ComputerPlayer::generateMoves()
 //Copy the start position of shape to temp
 void ComputerPlayer::bringShapeToStartPosition(Shape& temp, Shape& shape)
 {
-	if (shape.itsBomb())
+	if (!shape.itsBomb())
 	{
 		for (int i = 0; i < Shape::SIZE; i++)
 			temp.getBodyPoint(i).setPoint(shape.getBodyPoint(i).getX(), shape.getBodyPoint(i).getY());

@@ -120,20 +120,18 @@ void Shape::getRandShape(bool color)
 	if (color)
 		colorNum = rand() % 5 + 1;
 
-	shapeNum = 8;
-	setShape((int)Bomb, colorNum);
-	//int r = rand() % 20; //Every ~5% of the shapes we get bomb
-	//if (r == 0)
-	//{
-	//	setShape((int)Bomb, colorNum);
-	//	shapeNum = (int)Bomb;
-	//}
-	//else
-	//{
-	//	int sNum = rand() % 7 + 1;
-	//	setShape(sNum, colorNum);
-	//	shapeNum = sNum;
-	//}
+	int r = rand() % 20; //Every ~5% of the shapes we get bomb
+	if (r == 0)
+	{
+		setShape((int)Bomb, colorNum);
+		shapeNum = (int)Bomb;
+	}
+	else
+	{
+		int sNum = rand() % 7 + 1;
+		setShape(sNum, colorNum);
+		shapeNum = sNum;
+	}
 }
 
 //The function rotate the shape counter clockwise
@@ -300,6 +298,7 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 				body[i].move(key, onSideLeft, onSideRight, canLeft, canRight);
 			}
 		}
+		return true;
 	}
 	else
 	{
@@ -412,24 +411,40 @@ bool Shape::inBottom()
 	return false;
 }
 
-//Check if the shape in on the side of the borde
+//Check if the shape in on the side of the board
 bool Shape::isOnSideLeft()
 {
-	for (Point& p : body)
+	if (isBomb)
 	{
-		if (p.getX() <= (int)eDistance::FORx)
+		if (bomb.getX() <= (int)eDistance::FORx)
 			return true;
+	}
+	else
+	{
+		for (Point& p : body)
+		{
+			if (p.getX() <= (int)eDistance::FORx)
+				return true;
+		}
 	}
 	return false;
 }
 
-//Check if the shape in on the side of the borde
+//Check if the shape in on the side of the board
 bool Shape::isOnSideRight()
 {
-	for (Point& p : body)
+	if (isBomb)
 	{
-		if (p.getX() >= GameConfig::GAME_WIDTH)
+		if (bomb.getX() >= GameConfig::GAME_WIDTH)
 			return true;
+	}
+	else
+	{
+		for (Point& p : body)
+		{
+			if (p.getX() >= GameConfig::GAME_WIDTH)
+				return true;
+		}
 	}
 	return false;
 }
