@@ -5,7 +5,7 @@
 //The function init the player board
 void Player::initPlayerBoard()
 {
-	myBoard.initPlayerBoard(); //הייתה פה פונקציה שהעברתי ללוח
+	myBoard.initPlayerBoard();
 }
 
 //Copy the shape to the playres board
@@ -44,7 +44,8 @@ int Player::getTheLowestY()
 	return theLowest;
 }
 
-void Player::checkIfThereIsFullLine(int playerIndex)
+//The function check if there is a full line in board
+void Player::checkIfThereIsFullLine(int& playerIndex)
 {
 	int returnScore = 0;
 	int numOfRows = getTheLowestY();
@@ -56,7 +57,7 @@ void Player::checkIfThereIsFullLine(int playerIndex)
 
 
 //The function draw the board on the screen
-void Player::drawNewBoard(int playerIndex) 
+void Player::drawNewBoard(int& playerIndex) 
 {
 	for (int i = 0; i < GameConfig::GAME_HEIGHT; i++)
 	{
@@ -88,6 +89,8 @@ void Player::draw(int ch, int _x, int _y, int playerIndex)
 	else cout << ' ';
 }
 
+
+//The function update the board after the bomb
 void Player::updateBoardAfterBomb(int playerIndex)
 {
 	myBoard.handleBombExploade();

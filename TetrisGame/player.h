@@ -23,11 +23,11 @@ protected:
 
 public:
 
-	void drawNewBoard(int playerIndex);
+	void drawNewBoard(int& playerIndex);
 	void initPlayerBoard();
 	void copyShapeToBoard();
 	bool loseGame();
-	void checkIfThereIsFullLine(int playerIndex);
+	void checkIfThereIsFullLine(int& playerIndex);
 	void updateBoardAfterBomb(int playerIndex);
 
 	//player ctor
@@ -38,12 +38,12 @@ public:
 		return shape;
 	}
 
-	int getIndex()
+	int getIndex() const
 	{
 		return index;
 	}
 
-	int getScore()
+	int getScore() const
 	{
 		return score;
 	}

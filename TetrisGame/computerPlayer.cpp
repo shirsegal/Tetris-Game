@@ -128,6 +128,7 @@ int ComputerPlayer::getTheHighestY(Shape& shape)
 	return theHighest;
 }
 
+//The function evaluate the score of the move we want to check
 int ComputerPlayer::evaluateMove(Shape shape)
 {
 	int shapeScore = 0;
@@ -143,44 +144,44 @@ int ComputerPlayer::evaluateMove(Shape shape)
 	else
 	{
 		// Simulate the placement of the shape and evaluate the board state
-		Board simulatedBoard = myBoard;  // Create a copy of the current board state
+		Board simulatedBoard = myBoard;
 		copyShapeToBoard(simulatedBoard, shape);
-
 
 		int numOfRows = getTheLowestY(shape);
 		int theHighestY = getTheHighestY(shape);
 
-		// 1. Height of the Placement
+		//Height of the Placement
 		shapeScore -= (GameConfig::GAME_HEIGHT - numOfRows);
 
-		// 2. Number of Lines Cleared
-		int linesCleared = simulatedBoard.checkIfThereIsFullLine(numOfRows); //בודקת שורות ריקות
+		//Number of Lines Cleared
+		int linesCleared = simulatedBoard.checkIfThereIsFullLine(numOfRows); 
 		shapeScore += linesCleared * 100000;
 
-		// 3. Number of Holes Created
+		//Number of Holes Created
 		int holesCreated = 0;
 		int _x, y;
 		for (size_t i = 0; i < Shape::SIZE; i++)
 		{
 			_x = (shape.getBodyPoint(i)).getX() - 1;
 			y = (shape.getBodyPoint(i)).getY() - 2;
-			holesCreated += simulatedBoard.countHoles(y, _x); //בודקת חורים
+			holesCreated += simulatedBoard.countHoles(y, _x);
 		}
 		shapeScore -= holesCreated * 50;
 
-		// 4. Smoothness of the Surface
-		int surfaceRoughness = simulatedBoard.calculateBoardSurface(); //בודקת כמה חלק השטח - הפרשי גבהים
+		//Smoothness of the Surface
+		int surfaceRoughness = simulatedBoard.calculateBoardSurface(); 
 		shapeScore -= surfaceRoughness * 3;
 
-		// 5. Proximity to Edges
-		int x = shape.getLeftmostEdge();
-		int distanceToEdges = getMin(x, (GameConfig::GAME_WIDTH - x - 1)); //עדיף שלא יהיה קרוב לקצוות
-		shapeScore += distanceToEdges * 2;
+		//Proximity to Edges
+		//int x = shape.getLeftmostEdge();
+		//int distanceToEdges = getMin(x, (GameConfig::GAME_WIDTH - x - 1));
+		//shapeScore += distanceToEdges * 2;
 
 	}
 	return shapeScore;
 }
 
+//The function evaluate the score for bomb move
 int ComputerPlayer::evaluateBombScore(int x, int y)
 {
 	int bombScore = 0;
@@ -198,6 +199,7 @@ int ComputerPlayer::evaluateBombScore(int x, int y)
 	return bombScore;
 }
 
+//The function return min num
 int ComputerPlayer::getMin(int a, int b) const
 {
 	if (a < b)
@@ -207,6 +209,7 @@ int ComputerPlayer::getMin(int a, int b) const
 	return b;
 }
 
+//The function return max num
 int ComputerPlayer::checkMax(int a, int b) const
 {
 	if (a > b)
@@ -214,6 +217,7 @@ int ComputerPlayer::checkMax(int a, int b) const
 	else
 		return b;
 }
+
 
 void ComputerPlayer::copyArr(int from[arrSIZE], int moveScore)
 {

@@ -100,7 +100,7 @@ void Shape::setShape(int shapeNum, int shapeColor)
 }
 
 //The function return the x's shape that close to left border
-int Shape::getLeftmostEdge()
+int Shape::getLeftmostEdge() const
 {
 	int leftmost = GameConfig::GAME_WIDTH;
 
@@ -195,7 +195,6 @@ bool Shape::rotateClockwise(int playerIndex)
 //The function check if can do the rotate before it change
 bool Shape::canRotate()
 {
-
 	for (Point& p : body)
 	{
 		int x = p.getX() - (int)eDistance::FORx;
@@ -215,7 +214,7 @@ void Shape::dupShape(Point from[SIZE], Point to[SIZE])
 }
 
 //The function draw current shape
-void Shape::drawShape(int playerIndex, char ch)
+void Shape::drawShape(int& playerIndex, char ch)
 {
 	if (isBomb)
 	{
@@ -307,7 +306,7 @@ bool Shape::move(GameConfig::eKeys key, int playerIndex)
 }
 
 //The function check if the shape can move left
-bool Shape::canMoveLeft()
+bool Shape::canMoveLeft() const
 {
 	if (isBomb)
 	{
@@ -330,7 +329,7 @@ bool Shape::canMoveLeft()
 }
 
 //The function check if the shape can move right
-bool Shape::canMoveRight()
+bool Shape::canMoveRight() const
 {
 	if (isBomb)
 	{
@@ -389,7 +388,7 @@ void Shape::dropShape()
 }
 
 //Check if the shape is in the bottom
-bool Shape::inBottom()
+bool Shape::inBottom() 
 {
 	if (isBomb)
 	{

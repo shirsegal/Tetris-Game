@@ -35,7 +35,7 @@ void Board::initPlayerBoard()
 }
 
 //Init a new empty board //TODO void Player::initPlayerBoard()
-void Board::initBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH])
+void Board::initBoard(int board[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH]) const
 {
 	for (int i = 0; i < GameConfig::GAME_HEIGHT; i++)
 	{
@@ -59,7 +59,7 @@ void Board::drawBoards()
 }
 
 //Check if player lose the game
-bool Board::loseGame()
+bool Board::loseGame() const
 {
 	for (int i = 0; i < GameConfig::GAME_WIDTH; i++)
 	{
@@ -147,6 +147,7 @@ int Board::countHoles(int y, int x) const
 	return countHoles;
 }
 
+//The function return the highet of the colum
 int Board::getColumnHeight(int x) const
 {
 	for (int y = 0; y < GameConfig::GAME_HEIGHT; ++y) {
@@ -159,6 +160,7 @@ int Board::getColumnHeight(int x) const
 	return 0;
 }
 
+//The function calculate the surface borads highets 
 int Board::calculateBoardSurface() const
 {
 	int roughness = 0;
@@ -171,30 +173,7 @@ int Board::calculateBoardSurface() const
 	return roughness;
 }
 
-
-//void Board::handleBombExploade()
-//{
-//	int x = bomb.getX() - 1;
-//	int y = bomb.getY() - 2;
-//	int tempBoard[GameConfig::GAME_HEIGHT][GameConfig::GAME_WIDTH];
-//	initBoard(tempBoard);
-//
-//	// Copy the 9x9 grid around the explosion point to the temporary board
-//	for (int i = checkMax(0, x - 4); i < checkMin(GameConfig::GAME_WIDTH, x + 5); i++)
-//	{
-//		for (int j = checkMax(0, y - 4); j < checkMin(GameConfig::GAME_HEIGHT, y + 5); j++)
-//		{
-//			tempBoard[j][i] = gameBoard[j][i];
-//		}
-//	}
-//
-//	// Copy the temporary board back to the main board
-//	copyNewBoard(tempBoard, GameConfig::GAME_HEIGHT + 1);
-//
-//	// Check for full lines and handle them if necessary
-//	checkIfThereIsFullLine(0);
-//}
-
+//The function return min num
 int Board::checkMin(int a, int b) const
 {
 	if (a < b)
@@ -203,6 +182,7 @@ int Board::checkMin(int a, int b) const
 		return b;
 }
 
+//The function return max num
 int Board::checkMax(int a, int b) const
 {
 	if (a > b)
@@ -211,6 +191,7 @@ int Board::checkMax(int a, int b) const
 		return b;
 }
 
+//The function is handle the board ater bomb
 void Board::handleBombExploade()
 {
 	int x = bomb.getX() - 1;

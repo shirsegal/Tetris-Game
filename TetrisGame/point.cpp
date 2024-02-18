@@ -3,7 +3,7 @@
 #include <Windows.h>
 
 //function for the colors
-void Point::draw(char ch, int playerIndex, int backcolor)
+void Point::draw(char ch, int& playerIndex, int backcolor)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backcolor);
 	int _x = x + (GameConfig::GAME_WIDTH + GameConfig::PLAYERS_SEPERATION + 2) * playerIndex;
@@ -13,7 +13,7 @@ void Point::draw(char ch, int playerIndex, int backcolor)
 
 
 //Move points down or like the given key
-void Point::move(GameConfig::eKeys key, bool isOnSideL, bool isOnSideR, bool canLeft, bool canRight)
+void Point::move(GameConfig::eKeys key, bool& isOnSideL, bool& isOnSideR, bool& canLeft, bool& canRight)
 {
 	// Reset direction before processing a new movement
 	diff_x = 0;

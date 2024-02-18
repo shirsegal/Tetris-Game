@@ -31,19 +31,19 @@ public:
 	Shape(Board& board) : myBoard(board) {};
 	void getRandShape(bool color);
 	void dupShape(Point from[SIZE], Point to[SIZE]);
-	void drawShape(int playerIndex, char ch = '#');
+	void drawShape(int& playerIndex, char ch = '#');
 	bool move(GameConfig::eKeys key, int playerIndex);
 	void setShape(int shapeNum, int shapeColor);
 	bool rotateClockwise(int playerIndex);
 	bool canRotate();
 	bool rotateCounterClockwise(int playerIndex);
-	bool canMoveRight(); 
-	bool canMoveLeft(); 
+	bool canMoveRight() const;
+	bool canMoveLeft() const; 
 	bool reachExistingShape(); 
 	bool inBottom();
-	int getLeftmostEdge();
+	int getLeftmostEdge() const;
 
-	int getDirection()
+	int getDirection() const
 	{
 		return direction;
 	}

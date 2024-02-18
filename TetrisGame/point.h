@@ -16,8 +16,8 @@ public:
 
 	Point() {}; // empty constructor
 
-	void draw(char ch, int playerIndex, int backcolor);
-	void move(GameConfig::eKeys key, bool isOnSideL, bool isOnSideR, bool canLeft, bool canRight);
+	void draw(char ch, int& playerIndex, int backcolor);
+	void move(GameConfig::eKeys key, bool& isOnSideL, bool& isOnSideR, bool& canLeft, bool& canRight);
 
 	void setPoint(int _x, int _y, char _ch = '#')
 	{
@@ -26,17 +26,17 @@ public:
 		ch = _ch;
 	}
 
-	int getX()
+	int getX() const
 	{
 		return x;
 	}
 
-	int getY()
+	int getY() const
 	{
 		return y;
 	}
 
-	char getChar()
+	char getChar() const
 	{
 		return ch;
 	}
