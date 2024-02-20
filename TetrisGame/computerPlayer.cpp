@@ -172,11 +172,6 @@ int ComputerPlayer::evaluateMove(Shape shape)
 		int surfaceRoughness = simulatedBoard.calculateBoardSurface(); 
 		shapeScore -= surfaceRoughness * 3;
 
-		//Proximity to Edges
-		//int x = shape.getLeftmostEdge();
-		//int distanceToEdges = getMin(x, (GameConfig::GAME_WIDTH - x - 1));
-		//shapeScore += distanceToEdges * 2;
-
 	}
 	return shapeScore;
 }
