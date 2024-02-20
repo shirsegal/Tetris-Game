@@ -10,7 +10,6 @@
 #include "humanPlayer.h"
 #include "computerPlayer.h"
 
-using namespace std;
 
 void TetrisGame::deletePlayers()
 {
@@ -72,6 +71,9 @@ bool TetrisGame::runGame()
 			playerChoice = startNewGame(checkIfPlayWithColor());//Start a game computer VS computer
 			break;
 		case (int)INSTRUCTIONS:
+			playerChoice = menu.goToMenu(gamePaused);
+			break;
+		default:
 			playerChoice = menu.goToMenu(gamePaused);
 			break;
 		}
@@ -245,6 +247,7 @@ void TetrisGame::finishGame(int score1, int score2, bool losePlayer1, bool loseP
 
 	deletePlayers();
 	changeGameStatus(false);
+	return;
 }
 
 char TetrisGame::chooseComputerLevel(int playerNum)
